@@ -7,6 +7,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import com.site3.ecommerce.dao.CategoryRepository;
 import com.site3.ecommerce.dao.ProductRepository;
@@ -15,6 +16,7 @@ import com.site3.ecommerce.entities.Product;
 
 import net.bytebuddy.utility.RandomString;
 
+//@CrossOrigin("*")
 @SpringBootApplication
 public class ECommerceApplication  implements CommandLineRunner{
 

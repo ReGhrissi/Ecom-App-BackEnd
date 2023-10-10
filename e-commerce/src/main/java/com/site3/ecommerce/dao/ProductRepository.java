@@ -15,6 +15,7 @@ import com.site3.ecommerce.entities.Product;
 @RepositoryRestResource //spring Data Rest -> API Rest
 public interface ProductRepository extends JpaRepository<Product, Long>{
 	
+
 	@RestResource(path = "/selectedProducts")
 	public List<Product> findBySelectedIsTrue(); // methode de Spring Data
 	

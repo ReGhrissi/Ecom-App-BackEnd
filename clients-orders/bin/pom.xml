@@ -8,18 +8,15 @@
 		<version>2.7.16</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	
 	<groupId>com.site3</groupId>
 	<artifactId>clients-orders</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>clients-orders</name>
 	<description>Gestion des commandes du projet E-Commerce</description>
-	
 	<properties>
 		<java.version>1.8</java.version>
 		<spring-cloud.version>2021.0.8</spring-cloud.version>
 	</properties>
-	
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -44,7 +41,6 @@
 			<scope>runtime</scope>
 			<optional>true</optional>
 		</dependency>
-		
 		<dependency>
 			<groupId>com.mysql</groupId>
 			<artifactId>mysql-connector-j</artifactId>
