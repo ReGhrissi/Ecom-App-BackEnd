@@ -28,7 +28,7 @@ public class Product implements Serializable {
 	private boolean selected;
 	private boolean available;
 	private String photoName;
-	@Transient //ne sera pas ajouter dans la base de donnees
+	@Transient //ne sera pas ajouter dans la base de données
 	private int quantity=1;
 	
 	@ManyToOne
