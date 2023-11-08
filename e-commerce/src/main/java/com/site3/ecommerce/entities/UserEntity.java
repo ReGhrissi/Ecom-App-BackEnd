@@ -10,6 +10,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
@@ -30,11 +31,13 @@ public class UserEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue
+	@GeneratedValue (strategy = GenerationType.IDENTITY)
 	private long id;
 	
 	@Column(nullable=false)
 	private String userId;
+	
+	private String photoName = "unknown.jpg";
 	
 	@Column(nullable=true, length=50)
 	private String firstName;
@@ -48,7 +51,7 @@ public class UserEntity implements Serializable {
 	@Column(nullable=true)
 	private Boolean admin = false;
 	
-	@Column(nullable=false)
+	@Column(nullable=false) 
 	private String encryptedPassword;
 	
 	@Column(nullable=true)
@@ -58,10 +61,16 @@ public class UserEntity implements Serializable {
 	private Boolean emailVerificationStatus = false;
 	
 	@OneToMany(mappedBy="user", fetch = FetchType.EAGER, cascade=CascadeType.ALL)
-	private List<AddressEntity> addresses;
+	private Set<AddressEntity> addresses;
+	
+	@OneToMany(mappedBy="user", fetch = FetchType.EAGER, cascade=CascadeType.ALL)
+	private List<CommentEntity> comments;
 	
 	@OneToOne(mappedBy="user", fetch = FetchType.EAGER, cascade=CascadeType.ALL)
 	private ContactEntity contact;
+	
+	@OneToOne(mappedBy="user", fetch = FetchType.EAGER, cascade=CascadeType.ALL)
+	private PaymentCardEntity paymentCard;
 	
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy="users")
 	private Set<GroupEntity> groups = new HashSet<>();

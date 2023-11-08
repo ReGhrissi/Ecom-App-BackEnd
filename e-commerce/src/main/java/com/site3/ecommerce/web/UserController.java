@@ -1,5 +1,7 @@
 package com.site3.ecommerce.web;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,10 +21,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.http.MediaType;
 import org.springframework.http.HttpStatus;
 
+import com.site3.ecommerce.dao.UserRepository;
 import com.site3.ecommerce.dto.UserDto;
+import com.site3.ecommerce.entities.Product;
+import com.site3.ecommerce.entities.UserEntity;
 import com.site3.ecommerce.exceptions.UserException;
 import com.site3.ecommerce.requests.UserRequest;
 import com.site3.ecommerce.responses.ErrorMessages;
@@ -36,6 +42,9 @@ public class UserController {
 
 	@Autowired
 	UserService userService;
+	
+	@Autowired
+	UserRepository userRepository;
 
 //------------------------------------------- getUser() ------------------------------
 	//@GetMapping(path="/{id}", produces={MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
@@ -46,8 +55,15 @@ public class UserController {
 		
 		UserResponse userResponse = new UserResponse();
 		
-		BeanUtils.copyProperties(userDto, userResponse);
+		//BeanUtils.copyProperties(userDto, userResponse);
 		
+//----------------------------------------------------
+		ModelMapper modelMapper = new ModelMapper();
+		
+		userResponse =  modelMapper.map(userDto, UserResponse.class);
+		
+		//usersResponse.add(userResponse);
+//-----------------------------------------------------------		
 		return new ResponseEntity<UserResponse>(userResponse, HttpStatus.OK);
 	}
 
@@ -107,13 +123,16 @@ public class UserController {
 		
 		UserDto userDto = new UserDto();
 		
-		BeanUtils.copyProperties(userRequest, userDto);
+		//BeanUtils.copyProperties(userRequest, userDto);
+		ModelMapper modelMapper = new ModelMapper();
+		userDto = modelMapper.map(userRequest, UserDto.class);
 		
 		UserDto updateUser = userService.updateUser(id, userDto);
 		
 		UserResponse userResponse = new UserResponse();
 		
-		BeanUtils.copyProperties(updateUser, userResponse);
+		//BeanUtils.copyProperties(updateUser, userResponse);
+		userResponse = modelMapper.map(updateUser, UserResponse.class);
 		
 		return new ResponseEntity<UserResponse>(userResponse, HttpStatus.ACCEPTED);
 	}
@@ -127,6 +146,32 @@ public class UserController {
 		
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
+//------------------------------------------Photo User ---------------------------------------------------
+	
+	// methodes pour la recuperation des photo des users
+	
+	@GetMapping(path="/photoUser/{id}",produces = MediaType.IMAGE_JPEG_VALUE)
+	
+	public byte[] getPhoto(@PathVariable("id") String id) throws Exception
+	{
+		UserEntity u = userRepository.findByUserId(id);
+		return Files.readAllBytes(Paths.get(System.getProperty("user.home")+"/Images_Projets/Projet_Ecommerce/Users/"+u.getPhotoName()));
+		
+		
+	}
 
+	
+	@PostMapping(path="/uploadPhoto/{id}")
+	public  void uploadPhoto(MultipartFile file,@PathVariable String id) throws Exception
+	{
+		
+		UserEntity u = userRepository.findByUserId(id);
+		
+		u.setPhotoName(id+".jpg");
+		
+		Files.write(Paths.get(System.getProperty("user.home")+"/Images_Projets/Projet_Ecommerce/Users/"+u.getPhotoName()),file.getBytes());
+		userRepository.save(u);
+	
+	}
 	
 }

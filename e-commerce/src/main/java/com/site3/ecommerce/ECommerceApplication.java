@@ -14,7 +14,10 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import com.site3.ecommerce.dao.CategoryRepository;
 import com.site3.ecommerce.dao.ProductRepository;
 import com.site3.ecommerce.entities.Category;
+import com.site3.ecommerce.entities.CategoryEntity;
 import com.site3.ecommerce.entities.Product;
+import com.site3.ecommerce.entities.ProductEntity;
+import com.site3.ecommerce.shared.Utils;
 
 import net.bytebuddy.utility.RandomString;
 
@@ -43,6 +46,10 @@ public class ECommerceApplication  implements CommandLineRunner{
 	private RepositoryRestConfiguration repositoryRestConfiguration;
 	
 	
+	@Autowired
+	Utils util;
+	
+	
 	public static void main(String[] args) {
 		SpringApplication.run(ECommerceApplication.class, args);
 	}
@@ -50,33 +57,33 @@ public class ECommerceApplication  implements CommandLineRunner{
 			@Override
 			public void run(String... args) throws Exception {
 				
-				repositoryRestConfiguration.exposeIdsFor(Product.class, Category.class);
+				repositoryRestConfiguration.exposeIdsFor(ProductEntity.class, CategoryEntity.class);
 				
-				categoryRepository.save(new Category(null,"Para-Pharmacie",null,null));
-				categoryRepository.save(new Category(null,"Esthetique",null,null));
-				categoryRepository.save(new Category(null,"Parfums",null,null));
-				categoryRepository.save(new Category(null,"Accesoires",null,null));
-				categoryRepository.save(new Category(null,"Appareils",null,null));
-				categoryRepository.save(new Category(null,"Cadeaux",null,null));
-				categoryRepository.save(new Category(null,"Bebes",null,null));
+				categoryRepository.save(new CategoryEntity(1, util.generateStringId(32),"unknown.jpg","Téléphone & Tablette",null, true, null));
+				categoryRepository.save(new CategoryEntity(2, util.generateStringId(32),"unknown.jpg","PC & Imprimantes",null, true, null));
+				categoryRepository.save(new CategoryEntity(3, util.generateStringId(32),"unknown.jpg","TV & HI Tech",null, true, null));
+				categoryRepository.save(new CategoryEntity(4, util.generateStringId(32),"unknown.jpg","Appareils Photo",null, true, null));
+				categoryRepository.save(new CategoryEntity(5, util.generateStringId(32),"unknown.jpg","Accessoires",null, true, null));
+				categoryRepository.save(new CategoryEntity(6, util.generateStringId(32),"unknown.jpg","Jeux Vidéos",null, true, null));
+				categoryRepository.save(new CategoryEntity(7, util.generateStringId(32),"unknown.jpg","Open Logiciels",null, true, null));
 				
 				Random rnd = new Random();
 				categoryRepository.findAll().forEach
 				(c->{
 						for(int i=0; i<10 ; i++)
 						{
-							Product p = new Product();
+							ProductEntity p = new ProductEntity();
 							p.setName(RandomString.make(18));
 							p.setDescription(RandomString.make(15));
 							p.setCurrentPrice(10+rnd.nextInt(200));
-							p.setAvailable(rnd.nextBoolean());
-							p.setPromotion(rnd.nextBoolean());
-							p.setSelected(rnd.nextBoolean());
+							p.setAvailableProduct(rnd.nextBoolean());
+							p.setPromotionProduct(rnd.nextBoolean());
+							p.setSelectedProduct(rnd.nextBoolean());
 							p.setCategory(c);
 							p.setPhotoName("unknown.jpg");
 							productRepository.save(p);
 						}
-					});		
+					});		 
 				}
 
 }

@@ -15,9 +15,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import com.site3.ecommerce.dao.ContactRepository;
+import com.site3.ecommerce.dao.PaymentCardRepository;
 import com.site3.ecommerce.dao.UserRepository;
 import com.site3.ecommerce.dto.AddressDto;
+import com.site3.ecommerce.dto.ContactDto;
+import com.site3.ecommerce.dto.PaymentCardDto;
 import com.site3.ecommerce.dto.UserDto;
+import com.site3.ecommerce.entities.ContactEntity;
+import com.site3.ecommerce.entities.PaymentCardEntity;
 import com.site3.ecommerce.entities.UserEntity;
 import com.site3.ecommerce.services.UserService;
 import com.site3.ecommerce.shared.Utils;
@@ -28,6 +34,12 @@ public class UserServiceImpl implements UserService {
 	
 	@Autowired
 	UserRepository userRepository;
+	
+	@Autowired
+	ContactRepository contactRepository;
+	
+	@Autowired
+	PaymentCardRepository paymentCardRepository;
 	
 	@Autowired
 	BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -44,7 +56,7 @@ public class UserServiceImpl implements UserService {
 		
 		if(checkUser != null) throw new RuntimeException("User Alrady Exists !");
 		
-		
+/*		
 		for(int i=0; i < user.getAddresses().size(); i++) {
 			
 			AddressDto address = user.getAddresses().get(i);
@@ -52,9 +64,13 @@ public class UserServiceImpl implements UserService {
 			address.setAddressId(util.generateStringId(30));
 			user.getAddresses().set(i, address);
 		}
+*/		
+	//	user.getContact().setContactId(util.generateStringId(30));
+	//	user.getContact().setUser(user);
 		
-		user.getContact().setContactId(util.generateStringId(30));
-		user.getContact().setUser(user);
+//------------- paymentCard-----------------------		
+		user.getPaymentCard().setPaymentCardId(util.generateStringId(30));
+		user.getPaymentCard().setUser(user);
 		
         ModelMapper modelMapper = new ModelMapper();
 		
@@ -64,6 +80,8 @@ public class UserServiceImpl implements UserService {
 		userEntity.setEncryptedPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 		
 		userEntity.setUserId(util.generateStringId(32));
+		//userEntity.setAdmin(false);
+		//userEntity.setPhotoName("unknown.jpg");
 		
 		UserEntity newUser = userRepository.save(userEntity);
 		
@@ -108,8 +126,14 @@ public class UserServiceImpl implements UserService {
 		
 		UserDto userDto = new UserDto();
 		
-		BeanUtils.copyProperties(userEntity, userDto);
+		//BeanUtils.copyProperties(userEntity, userDto);
+	
+//--------------------------------
+		ModelMapper modelMapper = new ModelMapper();	
+		userDto = modelMapper.map(userEntity, UserDto.class);
 		
+		//usersDto.add(user);
+//---------------------------------------		
 		return userDto;
 	}
 
@@ -119,16 +143,72 @@ public class UserServiceImpl implements UserService {
 		
 		UserEntity userEntity = userRepository.findByUserId(userId);
 		
-		if(userEntity == null) throw new UsernameNotFoundException(userId); 
+	    if (userEntity == null) 
+	    {
+	        throw new UsernameNotFoundException(userId);
+	    }
+//----------	
+		//long UserID = userEntity.getId();
 		
-		userEntity.setFirstName(userDto.getFirstName());
-		userEntity.setLastName(userDto.getLastName());
+		//ContactEntity contactEntity = contactRepository.findByUserId(UserID);
 		
-		UserEntity userUpdated = userRepository.save(userEntity);
+		ContactEntity contactEntity = userEntity.getContact();
+		PaymentCardEntity paymentCardEntity = userEntity.getPaymentCard();
 		
+	    if (contactEntity == null) 
+	    {
+	        // Si elle n'existe pas, créez une nouvelle entité ContactEntity
+	        contactEntity = new ContactEntity();
+	        contactEntity.setContactId(util.generateStringId(30));
+	        contactEntity.setUser(userEntity);
+	    }
+	    
+	    if (paymentCardEntity == null) 
+	    {
+	    	paymentCardEntity = new PaymentCardEntity();
+	    	paymentCardEntity.setPaymentCardId(util.generateStringId(30));
+	    	paymentCardEntity.setUser(userEntity);
+	    }
+	    
+	    // Mettez à jour les propriétés de l'entité ContactEntity
+	    ContactDto contactDto = userDto.getContact();
+	    
+	    contactEntity.setCountry(contactDto.getCountry());
+	    contactEntity.setCity(contactDto.getCity());
+	    contactEntity.setStreet(contactDto.getStreet());
+	    contactEntity.setPostal(contactDto.getPostal());
+	    contactEntity.setMobile(contactDto.getMobile());
+	    contactEntity.setSkype(contactDto.getSkype());
+	    
+	    PaymentCardDto paymentCardDto = userDto.getPaymentCard();
+	    
+	    paymentCardEntity.setCardNumber(paymentCardDto.getCardNumber());
+	    paymentCardEntity.setCardOwner(paymentCardDto.getCardOwner());
+	    
+	    // Mettez à jour les propriétés de l'entité UserEntity
+	    userEntity.setFirstName(userDto.getFirstName());
+	    userEntity.setLastName(userDto.getLastName());
+
+	    // Sauvegardez les entités mises à jour
+	   
+	    ContactEntity contactUpdated = contactRepository.save(contactEntity);
+	    PaymentCardEntity paymentCardUpdated = paymentCardRepository.save(paymentCardEntity);
+	    
+	    userEntity.setContact(contactUpdated);
+	    userEntity.setPaymentCard(paymentCardUpdated);
+	    
+	    UserEntity userUpdated = userRepository.save(userEntity);
+
+//----------
+	
+		//BeanUtils.copyProperties(contactDto,contactEntity );
+		
+		ModelMapper modelMapper = new ModelMapper();	
+	
 		UserDto user = new UserDto();
 		
-		BeanUtils.copyProperties(userUpdated, user);
+		//BeanUtils.copyProperties(userUpdated, user);
+		user = modelMapper.map(userUpdated, UserDto.class);
 		
 		return user;
 	}

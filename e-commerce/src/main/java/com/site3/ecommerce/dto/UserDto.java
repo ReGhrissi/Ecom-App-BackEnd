@@ -13,6 +13,7 @@ public class UserDto implements Serializable {
 	
 	private long id;
 	private String userId;
+	private String photoName;
 	private String firstName;
 	private String lastName;
 	private String email;
@@ -23,6 +24,8 @@ public class UserDto implements Serializable {
 	private Boolean emailVerificationStatus = false;
 	
 	private List<AddressDto> addresses;
+	private List<CommentDto> comments;
 	private ContactDto contact;
+	private PaymentCardDto paymentCard;
 
 }

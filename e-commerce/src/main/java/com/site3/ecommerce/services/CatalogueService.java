@@ -2,8 +2,8 @@ package com.site3.ecommerce.services;
 
 import java.util.List;
 
-import com.site3.ecommerce.dto.CategoryDTO;
-import com.site3.ecommerce.dto.ProductDTO;
+import com.site3.ecommerce.dto.CategoryDto;
+import com.site3.ecommerce.dto.ProductDto;
 import com.site3.ecommerce.exceptions.CategoryNotFoundException;
 import com.site3.ecommerce.exceptions.ProductNotFoundException;
 
@@ -11,31 +11,31 @@ public interface CatalogueService {
 	
 //------------------------------ Category ----------------------------
 	
-		CategoryDTO getCategory(Long categoryId) throws CategoryNotFoundException;
+		CategoryDto getCategory(Long categoryId) throws CategoryNotFoundException;
 		
-		List<CategoryDTO> listCategories();
+		List<CategoryDto> listCategories();
 
-	 	CategoryDTO saveCategory(CategoryDTO categoryDTO);
+	 	CategoryDto saveCategory(CategoryDto categoryDTO);
 	 		
-	 	CategoryDTO updateCategory(CategoryDTO categoryDTO);
+	 	CategoryDto updateCategory(CategoryDto categoryDTO);
 	 	
 	 	void deleteCategory(Long categoryId);
 	 	
-	 	List<CategoryDTO> searchCategories(String keyword);
+	 	List<CategoryDto> searchCategories(String keyword);
 	 	
 //------------------------------ Product --------------------------------
 	 	
-		ProductDTO getProduct(Long productId) throws ProductNotFoundException;
+		ProductDto getProduct(Long productId) throws ProductNotFoundException;
 		
-		List<ProductDTO> listProducts();
+		List<ProductDto> listProducts();
 
-		ProductDTO saveProduct(ProductDTO productDTO);
+		ProductDto saveProduct(ProductDto productDTO);
 	 		
-		ProductDTO updateProduct(ProductDTO productDTO);
+		ProductDto updateProduct(ProductDto productDTO);
 	 	
 	 	void deleteProduct(Long productId);
 	 	
-	 	List<ProductDTO> searchProducts(String keyword);
+	 	List<ProductDto> searchProducts(String keyword);
 	 	
 	 
 	   // CurrentBankAccountDTO saveCurrentBankAccount(double initialBalance, double overDraft, Long customerId) throws CustomerNotFoundException;

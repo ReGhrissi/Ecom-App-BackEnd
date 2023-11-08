@@ -12,8 +12,15 @@ public class ContactDto implements Serializable {
 	
 	private long id;
 	private String contactId;
+	
+	private String country;
+	private String city;
+	private String street;
+	private String postal;
+	
 	private String mobile;
 	private String skype;
+	
 	private UserDto user;
 	
 }

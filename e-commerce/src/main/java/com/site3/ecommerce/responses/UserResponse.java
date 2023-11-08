@@ -8,6 +8,7 @@ import lombok.Data;
 public class UserResponse {
 	
 	private String userId;
+	private String photoName;
 	private String firstName;
 	private String lastName;
 	private String email;
@@ -16,4 +17,5 @@ public class UserResponse {
 	
 	private List<AddressResponse> addresses;
 	private ContactResponse contact;
+	private PaymentCardResponse paymentCard;
 }

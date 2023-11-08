@@ -8,12 +8,15 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+
 import lombok.Data;
 
 @Data
 public class UserRequest {
 	
-	@NotBlank(message="Ce champ ne doit pas etre null !")
+	private String photoName;
+	
+    @NotBlank(message="Ce champ ne doit pas etre null !")
 	private String firstName;
 	
 	@NotNull(message="Ce champ ne doit pas etre null !")
@@ -31,11 +34,13 @@ public class UserRequest {
 			message="ce mot de passe doit avoir des lettres en Maj et Minsc et numero")
 	private String password;
 
-	
+	//admin
 	private Boolean admin;
 	
 	private List<AddressRequest> addresses;
 	
 	private ContactRequest contact;
+	
+	private PaymentCardRequest paymentCard;
 	
 }

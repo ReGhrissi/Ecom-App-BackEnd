@@ -1,7 +1,7 @@
 package com.site3.ecommerce.entities;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,37 +17,30 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Data @NoArgsConstructor @AllArgsConstructor @ToString
-@Entity(name="addresses")
-public class AddressEntity implements Serializable{
-
-
-	private static final long serialVersionUID = 1L;
+@Entity(name="comments")
+public class CommentEntity implements Serializable {
 	
+	private static final long serialVersionUID = 1L;
+
 	
 	@Id
 	@GeneratedValue (strategy = GenerationType.IDENTITY)
 	private long id;
 	
 	@Column(length=30, nullable=false)
-	private String addressId;
+	private String commentId;
 	
-	@Column(length=20, nullable=false)
-	private String city;
+	@Column(nullable=false)
+	private String commentText;
 	
-	@Column(length=20, nullable=false)
-	private String country;
-	
-	@Column(length=50, nullable=false)
-	private String street;
-	
-	@Column(length=7, nullable=false)
-	private String postal;
-	
-	@Column(length=20, nullable=false)
-	private String type;
+	private Date commentDate;
 	
 	@ManyToOne
 	@JoinColumn(name="users_id")
 	private UserEntity user;
+	
+	//@ManyToOne
+	//@JoinColumn(name="product_id")
+	//private Product product;
 
 }

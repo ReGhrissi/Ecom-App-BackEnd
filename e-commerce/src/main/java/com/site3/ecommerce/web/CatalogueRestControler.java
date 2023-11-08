@@ -1,5 +1,5 @@
 package com.site3.ecommerce.web;
-
+/*
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
@@ -18,8 +18,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.site3.ecommerce.dao.CategoryRepository;
 import com.site3.ecommerce.dao.ProductRepository;
-import com.site3.ecommerce.dto.CategoryDTO;
-import com.site3.ecommerce.dto.ProductDTO;
+import com.site3.ecommerce.dto.CategoryDto;
+import com.site3.ecommerce.dto.ProductDto;
 import com.site3.ecommerce.entities.Product;
 import com.site3.ecommerce.exceptions.CategoryNotFoundException;
 import com.site3.ecommerce.exceptions.ProductNotFoundException;
@@ -39,7 +39,7 @@ public class CatalogueRestControler {
 	
 	private CategoryRepository categoryRepository;
 	private ProductRepository productRepository;
-	
+*/	
 /*  
     // injection de dependence via construcleur 
 	// constructeur avec parametre -> equivalent a @Autowired (
@@ -49,33 +49,33 @@ public class CatalogueRestControler {
 	}
 	
 */
-	
+/*	
 	private CatalogueService catalogueService;
 	
 //---------------------------- Category ------------------------------------
 	
     @GetMapping("/dto/categories/{id}")
-    public CategoryDTO getCategory(@PathVariable(name = "id") Long categoryId) throws CategoryNotFoundException {
+    public CategoryDto getCategory(@PathVariable(name = "id") Long categoryId) throws CategoryNotFoundException {
     
     	return catalogueService.getCategory(categoryId);
     }
     
     
 	@GetMapping("/dto/categories")
-    public List<CategoryDTO> Categories(){
+    public List<CategoryDto> Categories(){
 		
         return catalogueService.listCategories();
     }
 	 
     
     @PostMapping("/dto/categories")
-    public CategoryDTO saveCategory(@RequestBody CategoryDTO categoryDTO){
+    public CategoryDto saveCategory(@RequestBody CategoryDto categoryDTO){
         return catalogueService.saveCategory(categoryDTO);
     }
     
     
     @PutMapping("/dto/categories/{categoryId}")
-    public CategoryDTO updateCategory(@PathVariable Long categoryId, @RequestBody CategoryDTO categoryDTO){
+    public CategoryDto updateCategory(@PathVariable Long categoryId, @RequestBody CategoryDto categoryDTO){
     	
     	categoryDTO.setId(categoryId);
     	
@@ -91,7 +91,7 @@ public class CatalogueRestControler {
     
 	
     @GetMapping("/dto/categories/search")
-    public List<CategoryDTO> searchCategories(@RequestParam(name = "keyword",defaultValue = "") String keyword){
+    public List<CategoryDto> searchCategories(@RequestParam(name = "keyword",defaultValue = "") String keyword){
     
     	return catalogueService.searchCategories("%"+keyword+"%");
     }
@@ -99,28 +99,28 @@ public class CatalogueRestControler {
 //--------------------------- Produit --------------------------------------
 	
     @GetMapping("/dto/products/{id}")
-    public ProductDTO getProduct(@PathVariable(name = "id") Long productId) throws ProductNotFoundException {
+    public ProductDto getProduct(@PathVariable(name = "id") Long productId) throws ProductNotFoundException {
     
     	return catalogueService.getProduct(productId);
     }
     
     
 	@GetMapping("/dto/products")
-    public List<ProductDTO> Products(){
+    public List<ProductDto> Products(){
 		
         return catalogueService.listProducts();
     }
 	 
     
     @PostMapping("/dto/products")
-    public ProductDTO saveProduct(@RequestBody ProductDTO productDTO){
+    public ProductDto saveProduct(@RequestBody ProductDto productDTO){
     	
         return catalogueService.saveProduct(productDTO);
     }
     
     
     @PutMapping("/dto/products/{productId}")
-    public ProductDTO updateProduct(@PathVariable Long productId, @RequestBody ProductDTO productDTO){
+    public ProductDto updateProduct(@PathVariable Long productId, @RequestBody ProductDto productDTO){
     	
     	productDTO.setId(productId);
     	
@@ -136,7 +136,7 @@ public class CatalogueRestControler {
     
 	
     @GetMapping("/dto/products/search")
-    public List<ProductDTO> searchProducts(@RequestParam(name = "keyword",defaultValue = "") String keyword){
+    public List<ProductDto> searchProducts(@RequestParam(name = "keyword",defaultValue = "") String keyword){
     
     	return catalogueService.searchProducts("%"+keyword+"%");
     }
@@ -169,3 +169,4 @@ public class CatalogueRestControler {
 	
 	
 }
+*/

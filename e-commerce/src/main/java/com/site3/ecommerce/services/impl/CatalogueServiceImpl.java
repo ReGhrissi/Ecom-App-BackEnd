@@ -1,5 +1,5 @@
 package com.site3.ecommerce.services.impl;
-
+/*
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -8,8 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.site3.ecommerce.dao.CategoryRepository;
 import com.site3.ecommerce.dao.ProductRepository;
-import com.site3.ecommerce.dto.CategoryDTO;
-import com.site3.ecommerce.dto.ProductDTO;
+import com.site3.ecommerce.dto.CategoryDto;
+import com.site3.ecommerce.dto.ProductDto;
 import com.site3.ecommerce.entities.Category;
 import com.site3.ecommerce.entities.Product;
 import com.site3.ecommerce.exceptions.CategoryNotFoundException;
@@ -34,7 +34,7 @@ public class CatalogueServiceImpl implements CatalogueService {
 	
 //--------------------------------- Category -----------------------------------
 	@Override
-	public CategoryDTO getCategory(Long categoryId) throws CategoryNotFoundException {
+	public CategoryDto getCategory(Long categoryId) throws CategoryNotFoundException {
 		
 		Category category = categoryRepository.findById(categoryId)
 							.orElseThrow(() -> new CategoryNotFoundException("Category Not found"));
@@ -43,13 +43,14 @@ public class CatalogueServiceImpl implements CatalogueService {
 	}
 
 	@Override
-	public List<CategoryDTO> listCategories() {
+	public List<CategoryDto> listCategories() {
 		
         List<Category> categories = categoryRepository.findAll();
         
-        List<CategoryDTO> categoryDTOS = categories.stream()
+        List<CategoryDto> categoryDTOS = categories.stream()
                 .map(category -> ecomMapper.fromCategory(category))
                 .collect(Collectors.toList());
+  */              
         /*
         List<CustomerDTO> customerDTOS=new ArrayList<>();
         for (Customer customer:customers){
@@ -58,11 +59,12 @@ public class CatalogueServiceImpl implements CatalogueService {
         }
         *
          */
+	/*
         return categoryDTOS;
 	}
 
 	@Override
-	public CategoryDTO saveCategory(CategoryDTO categoryDTO) {
+	public CategoryDto saveCategory(CategoryDto categoryDTO) {
 		
         log.info("Saving new Category");
         
@@ -74,7 +76,7 @@ public class CatalogueServiceImpl implements CatalogueService {
 	}
 
 	@Override
-	public CategoryDTO updateCategory(CategoryDTO categoryDTO) {
+	public CategoryDto updateCategory(CategoryDto categoryDTO) {
 		
         log.info("Updating Category");
         
@@ -92,11 +94,11 @@ public class CatalogueServiceImpl implements CatalogueService {
 	}
 
 	@Override
-	public List<CategoryDTO> searchCategories(String keyword) {
+	public List<CategoryDto> searchCategories(String keyword) {
 		
         List<Category> categories = categoryRepository.searchCategory(keyword);
         
-        List<CategoryDTO> categoryDTOS = categories.stream().map(cat -> ecomMapper
+        List<CategoryDto> categoryDTOS = categories.stream().map(cat -> ecomMapper
         					.fromCategory(cat)).collect(Collectors.toList());
         return categoryDTOS;
 	}
@@ -104,7 +106,7 @@ public class CatalogueServiceImpl implements CatalogueService {
 	
 //------------------------------ Product -------------------------------------
 	@Override
-	public ProductDTO getProduct(Long productId) throws ProductNotFoundException {
+	public ProductDto getProduct(Long productId) throws ProductNotFoundException {
 		
 		Product product = productRepository.findById(productId)
 							.orElseThrow(() -> new ProductNotFoundException("Product Not found"));
@@ -113,11 +115,11 @@ public class CatalogueServiceImpl implements CatalogueService {
 	}
 
 	@Override
-	public List<ProductDTO> listProducts() {
+	public List<ProductDto> listProducts() {
 		
         List<Product> products = productRepository.findAll();
         
-        List<ProductDTO> productDTOS = products.stream()
+        List<ProductDto> productDTOS = products.stream()
                 .map(product -> ecomMapper.fromProduct(product))
                 .collect(Collectors.toList());
        
@@ -125,7 +127,7 @@ public class CatalogueServiceImpl implements CatalogueService {
 	}
 
 	@Override
-	public ProductDTO saveProduct(ProductDTO productDTO) {
+	public ProductDto saveProduct(ProductDto productDTO) {
 		
         log.info("Saving new Product");
         
@@ -137,7 +139,7 @@ public class CatalogueServiceImpl implements CatalogueService {
 	}
 
 	@Override
-	public ProductDTO updateProduct(ProductDTO productDTO) {
+	public ProductDto updateProduct(ProductDto productDTO) {
 		
         log.info("Updating Product");
         
@@ -156,13 +158,15 @@ public class CatalogueServiceImpl implements CatalogueService {
 	}
 
 	@Override
-	public List<ProductDTO> searchProducts(String keyword) {
+	public List<ProductDto> searchProducts(String keyword) {
 		
         List<Product> products = productRepository.searchProduct(keyword);
         
-        List<ProductDTO> productDTOS = products.stream().map(p -> ecomMapper
+        List<ProductDto> productDTOS = products.stream().map(p -> ecomMapper
         					.fromProduct(p)).collect(Collectors.toList());
         return productDTOS;
 	}
+	
 
 }
+*/

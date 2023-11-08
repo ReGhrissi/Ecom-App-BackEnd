@@ -3,8 +3,8 @@ package com.site3.ecommerce.mappers;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
-import com.site3.ecommerce.dto.CategoryDTO;
-import com.site3.ecommerce.dto.ProductDTO;
+import com.site3.ecommerce.dto.CategoryDto;
+import com.site3.ecommerce.dto.ProductDto;
 import com.site3.ecommerce.entities.Category;
 import com.site3.ecommerce.entities.Product;
 
@@ -14,10 +14,10 @@ public class EcomMapperImpl {
 	
 //----------------------------- Category Mapper-----------------------------------
 	
-	public CategoryDTO fromCategory(Category category)
+	public CategoryDto fromCategory(Category category)
 	{
 		
-		CategoryDTO categoryDTO = new CategoryDTO();
+		CategoryDto categoryDTO = new CategoryDto();
 		/*
 		categoryDTO.setId(category.getId());
 		categoryDTO.setName(category.getName());
@@ -31,7 +31,7 @@ public class EcomMapperImpl {
 	}
 	
 	
-	public Category fromCategoryDTO(CategoryDTO categoryDTO)
+	public Category fromCategoryDTO(CategoryDto categoryDTO)
 	{
 		
 		Category category = new Category();
@@ -43,10 +43,10 @@ public class EcomMapperImpl {
 
 //---------------------------------- Product Mapper ----------------------------------
 	
-	public ProductDTO fromProduct(Product product)
+	public ProductDto fromProduct(Product product)
 	{
 		
-		ProductDTO productDTO = new ProductDTO();
+		ProductDto productDTO = new ProductDto();
 	
 		BeanUtils.copyProperties(product, productDTO);
 		
@@ -54,7 +54,7 @@ public class EcomMapperImpl {
 	}
 	
 	
-	public Product fromProductDTO(ProductDTO productDTO)
+	public Product fromProductDTO(ProductDto productDTO)
 	{
 		
 		Product product = new Product();
