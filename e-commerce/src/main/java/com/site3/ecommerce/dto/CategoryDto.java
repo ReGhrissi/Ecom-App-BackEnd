@@ -18,7 +18,7 @@ public class CategoryDto implements Serializable {
 	private String name;
 	private String description;
 	
-	private boolean active = true;
+	private Boolean active = true;
 	
 	private List<ProductDto> products;
 	

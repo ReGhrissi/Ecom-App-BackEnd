@@ -64,7 +64,7 @@ public class CategoryController {
 		}
 
 //------------------------------------------------ getAllCategories() -----------------------------------
-		
+/*		
 		//@GetMapping(produces={MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
 		@GetMapping()
 		public ResponseEntity<List<CategoryResponse>> getAllCategories(@RequestParam(value="page", defaultValue = "1")
@@ -87,7 +87,26 @@ public class CategoryController {
 			
 			return new ResponseEntity<List<CategoryResponse>>(categoriesResponse, HttpStatus.OK);
 		}
-
+*/
+		//@GetMapping(produces={MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+		@GetMapping()
+		public ResponseEntity<List<CategoryResponse>> getAllCategories() {
+			
+			List<CategoryResponse> categoriesResponse = new ArrayList<>();
+			
+			List<CategoryDto> categories = categoryService.getCategories();
+			
+			for(CategoryDto categoryDto: categories) {
+				
+				ModelMapper modelMapper = new ModelMapper();
+				CategoryResponse categoryResponse =  modelMapper.map(categoryDto, CategoryResponse.class);
+				
+				categoriesResponse.add(categoryResponse);
+			}
+			
+			return new ResponseEntity<List<CategoryResponse>>(categoriesResponse, HttpStatus.OK);
+		}
+		
 //---------------------------------------------- createCategory() ---------------------------------------
 		
 		//@PostMapping(consumes={MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}, 
@@ -159,7 +178,7 @@ public class CategoryController {
 		}
 
 		
-		@PostMapping(path="/uploadCategory/{id}")
+		@PostMapping(path="/uploadPhoto/{id}")
 		public  void uploadPhoto(MultipartFile file,@PathVariable String id) throws Exception
 		{
 			

@@ -14,8 +14,10 @@ public class UserResponse {
 	private String email;
 	
 	private Boolean admin;
+	private Boolean active;
 	
 	private List<AddressResponse> addresses;
 	private ContactResponse contact;
 	private PaymentCardResponse paymentCard;
+	
 }

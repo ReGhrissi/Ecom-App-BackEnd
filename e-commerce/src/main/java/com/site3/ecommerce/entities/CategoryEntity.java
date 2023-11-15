@@ -40,7 +40,7 @@ public class CategoryEntity implements Serializable{
 	//@Column(nullable=false)
 	private String description;
 	
-	private boolean active =true;
+	private boolean active = true;
 	
 	@OneToMany(mappedBy = "category", fetch = FetchType.EAGER, cascade=CascadeType.ALL)
 	private List<ProductEntity> products;

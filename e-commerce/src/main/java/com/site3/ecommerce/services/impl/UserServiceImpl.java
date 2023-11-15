@@ -69,8 +69,8 @@ public class UserServiceImpl implements UserService {
 	//	user.getContact().setUser(user);
 		
 //------------- paymentCard-----------------------		
-		user.getPaymentCard().setPaymentCardId(util.generateStringId(30));
-		user.getPaymentCard().setUser(user);
+	//	user.getPaymentCard().setPaymentCardId(util.generateStringId(30));
+	//	user.getPaymentCard().setUser(user);
 		
         ModelMapper modelMapper = new ModelMapper();
 		
@@ -80,8 +80,9 @@ public class UserServiceImpl implements UserService {
 		userEntity.setEncryptedPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 		
 		userEntity.setUserId(util.generateStringId(32));
-		//userEntity.setAdmin(false);
-		//userEntity.setPhotoName("unknown.jpg");
+		userEntity.setAdmin(false);
+		userEntity.setActive(true);
+		userEntity.setPhotoName("unknown.jpg");
 		
 		UserEntity newUser = userRepository.save(userEntity);
 		
@@ -128,12 +129,12 @@ public class UserServiceImpl implements UserService {
 		
 		//BeanUtils.copyProperties(userEntity, userDto);
 	
-//--------------------------------
+//----------------------
 		ModelMapper modelMapper = new ModelMapper();	
 		userDto = modelMapper.map(userEntity, UserDto.class);
 		
 		//usersDto.add(user);
-//---------------------------------------		
+//----------------------------		
 		return userDto;
 	}
 
@@ -155,47 +156,65 @@ public class UserServiceImpl implements UserService {
 		ContactEntity contactEntity = userEntity.getContact();
 		PaymentCardEntity paymentCardEntity = userEntity.getPaymentCard();
 		
-	    if (contactEntity == null) 
+	    if (contactEntity != null && userDto.getContact() !=null) 
 	    {
 	        // Si elle n'existe pas, créez une nouvelle entité ContactEntity
-	        contactEntity = new ContactEntity();
-	        contactEntity.setContactId(util.generateStringId(30));
-	        contactEntity.setUser(userEntity);
+	      //  contactEntity = new ContactEntity();
+	      //  contactEntity.setContactId(util.generateStringId(30));
+	      //  contactEntity.setUser(userEntity);
+		    ContactDto contactDto = userDto.getContact();
+		    
+		    contactEntity.setCountry(contactDto.getCountry());
+		    contactEntity.setCity(contactDto.getCity());
+		    contactEntity.setStreet(contactDto.getStreet());
+		    contactEntity.setPostal(contactDto.getPostal());
+		    contactEntity.setMobile(contactDto.getMobile());
+		    contactEntity.setSkype(contactDto.getSkype());
+		    
+		    ContactEntity contactUpdated = contactRepository.save(contactEntity);
+		    userEntity.setContact(contactUpdated);
+	    	
 	    }
 	    
-	    if (paymentCardEntity == null) 
+	    if (paymentCardEntity != null && userDto.getPaymentCard() != null) 
 	    {
-	    	paymentCardEntity = new PaymentCardEntity();
-	    	paymentCardEntity.setPaymentCardId(util.generateStringId(30));
-	    	paymentCardEntity.setUser(userEntity);
+	    	//paymentCardEntity = new PaymentCardEntity();
+	    	//paymentCardEntity.setPaymentCardId(util.generateStringId(30));
+	    	//paymentCardEntity.setUser(userEntity);
+	    	
+		    PaymentCardDto paymentCardDto = userDto.getPaymentCard();
+	
+		    paymentCardEntity.setCardNumber(paymentCardDto.getCardNumber());
+		    paymentCardEntity.setCardOwner(paymentCardDto.getCardOwner());
+		    
+		    PaymentCardEntity paymentCardUpdated = paymentCardRepository.save(paymentCardEntity);
+		    userEntity.setPaymentCard(paymentCardUpdated);
 	    }
 	    
-	    // Mettez à jour les propriétés de l'entité ContactEntity
-	    ContactDto contactDto = userDto.getContact();
+
+	   
+
 	    
-	    contactEntity.setCountry(contactDto.getCountry());
-	    contactEntity.setCity(contactDto.getCity());
-	    contactEntity.setStreet(contactDto.getStreet());
-	    contactEntity.setPostal(contactDto.getPostal());
-	    contactEntity.setMobile(contactDto.getMobile());
-	    contactEntity.setSkype(contactDto.getSkype());
-	    
-	    PaymentCardDto paymentCardDto = userDto.getPaymentCard();
-	    
-	    paymentCardEntity.setCardNumber(paymentCardDto.getCardNumber());
-	    paymentCardEntity.setCardOwner(paymentCardDto.getCardOwner());
-	    
-	    // Mettez à jour les propriétés de l'entité UserEntity
+	    // Mettez à jour les propriétés de l'entité UserEntity  
 	    userEntity.setFirstName(userDto.getFirstName());
 	    userEntity.setLastName(userDto.getLastName());
-
+	    
+	    if(userDto.getAdmin() != null)
+	    {
+	    userEntity.setAdmin(userDto.getAdmin());
+	    }
+	    
+	    if(userDto.getActive() != null)
+	    {
+	    	userEntity.setActive(userDto.getActive());
+	    }
 	    // Sauvegardez les entités mises à jour
 	   
-	    ContactEntity contactUpdated = contactRepository.save(contactEntity);
-	    PaymentCardEntity paymentCardUpdated = paymentCardRepository.save(paymentCardEntity);
 	    
-	    userEntity.setContact(contactUpdated);
-	    userEntity.setPaymentCard(paymentCardUpdated);
+
+	    
+	    
+
 	    
 	    UserEntity userUpdated = userRepository.save(userEntity);
 

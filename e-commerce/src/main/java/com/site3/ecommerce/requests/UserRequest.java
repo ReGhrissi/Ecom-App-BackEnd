@@ -37,6 +37,8 @@ public class UserRequest {
 	//admin
 	private Boolean admin;
 	
+	private Boolean active;
+	
 	private List<AddressRequest> addresses;
 	
 	private ContactRequest contact;

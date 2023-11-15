@@ -73,9 +73,15 @@ public class ECommerceApplication  implements CommandLineRunner{
 						for(int i=0; i<10 ; i++)
 						{
 							ProductEntity p = new ProductEntity();
+							p.setProductId(util.generateStringId(32));
 							p.setName(RandomString.make(18));
 							p.setDescription(RandomString.make(15));
+							p.setPrice(10+rnd.nextInt(200));
 							p.setCurrentPrice(10+rnd.nextInt(200));
+							p.setStock(10+rnd.nextInt(200));
+							p.setNewProduct(rnd.nextBoolean());
+							p.setFuturProduct(rnd.nextBoolean());
+							p.setTendancyProduct(rnd.nextBoolean());
 							p.setAvailableProduct(rnd.nextBoolean());
 							p.setPromotionProduct(rnd.nextBoolean());
 							p.setSelectedProduct(rnd.nextBoolean());
@@ -84,6 +90,7 @@ public class ECommerceApplication  implements CommandLineRunner{
 							productRepository.save(p);
 						}
 					});		 
+					
 				}
 
 }

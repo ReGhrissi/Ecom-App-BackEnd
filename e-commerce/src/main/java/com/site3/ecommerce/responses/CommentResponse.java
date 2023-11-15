@@ -11,6 +11,8 @@ public class CommentResponse {
 	private String commentText;
 	private Date commentDate;
 	
-	private UserResponse userResponse;
+	private String userId;
+	
+	private String productId;
 	
 }

@@ -16,5 +16,7 @@ public interface CategoryService {
 	
 	void deleteCategory(String categoryId);
 	
-	List<CategoryDto> getCategories(int page, int limit, String search, int status);
+	//List<CategoryDto> getCategories(int page, int limit, String search, int status);
+	
+	List<CategoryDto> getCategories();
 }

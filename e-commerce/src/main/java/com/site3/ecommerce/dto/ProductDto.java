@@ -1,14 +1,16 @@
 package com.site3.ecommerce.dto;
 
 import java.io.Serializable;
+import java.util.List;
 
-import javax.persistence.Column;
 import javax.persistence.Transient;
 
 import lombok.Data;
 
 
-@Data 
+
+
+@Data
 public class ProductDto implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
@@ -26,18 +28,20 @@ public class ProductDto implements Serializable {
 	private double currentPrice;
 	private double promotionRate;
 	
-	private boolean  newProduct;
-	private boolean  futurProduct;
-	private boolean  tendancyProduct;
-	private boolean  promotionProduct;
-	private boolean selectedProduct;
-	private boolean availableProduct;
+	private Boolean  newProduct;
+	private Boolean  futurProduct;
+	private Boolean  tendancyProduct;
+	private Boolean  promotionProduct;
+	private Boolean selectedProduct;
+	private Boolean availableProduct;
 	
 	@Transient //ne sera pas ajouter dans la base de données
 	private int quantity=1;
 	private int stock;
 	
 	private CategoryDto category;
+	
+	private List<CommentDto> comments;
 	
 
 }

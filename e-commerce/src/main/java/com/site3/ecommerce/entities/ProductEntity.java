@@ -64,8 +64,8 @@ public class ProductEntity implements Serializable {
 	@JoinColumn(name="categories_id")
 	private CategoryEntity category;
 	
-//	@OneToMany(mappedBy="product", fetch = FetchType.EAGER, cascade=CascadeType.ALL)
-//	private List<CommentEntity> comments;
+	@OneToMany(mappedBy="product", fetch = FetchType.EAGER, cascade=CascadeType.ALL)
+	private List<CommentEntity> comments;
 	
 
 }

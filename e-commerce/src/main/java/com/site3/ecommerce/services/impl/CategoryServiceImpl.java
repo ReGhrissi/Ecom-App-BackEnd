@@ -1,17 +1,22 @@
 package com.site3.ecommerce.services.impl;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import com.site3.ecommerce.dao.CategoryRepository;
+
 import com.site3.ecommerce.dto.CategoryDto;
+
 import com.site3.ecommerce.entities.CategoryEntity;
+
 import com.site3.ecommerce.exceptions.CategoryException;
 import com.site3.ecommerce.services.CategoryService;
 import com.site3.ecommerce.shared.Utils;
@@ -86,7 +91,7 @@ public class CategoryServiceImpl implements CategoryService {
 
 	    categoryEntity.setName(categoryDto.getName());
 	    categoryEntity.setDescription(categoryDto.getDescription());
-	   // categoryEntity.setActive(categoryDto.isActive());
+	    categoryEntity.setActive(categoryDto.getActive());
 
 	    
 	    CategoryEntity categoryUpdated = categoryRepository.save(categoryEntity);
@@ -109,10 +114,10 @@ public class CategoryServiceImpl implements CategoryService {
 		categoryRepository.delete(categoryEntity);
 
 	}
-
+/*
 	@Override
 	public List<CategoryDto> getCategories(int page, int limit, String search, int status) {
-		
+	*//*	
 		if(page > 0) page = page - 1;
 		
 		List<CategoryDto> categoriesDto = new ArrayList<>();
@@ -142,6 +147,28 @@ public class CategoryServiceImpl implements CategoryService {
 		}
 		
 		return categoriesDto;
+		*//*
+		return null;
 	}
+*/
+	@Override
+	public List<CategoryDto> getCategories() {
+		
+		List<CategoryDto> categoriesDto = new ArrayList<>();
+		
+		List<CategoryEntity> categories = (List<CategoryEntity>) categoryRepository.findAll();
+		
+		for(CategoryEntity categoryEntity: categories) {
+			
+			ModelMapper modelMapper = new ModelMapper();	
+			
+			CategoryDto category = modelMapper.map(categoryEntity, CategoryDto.class);
+			
+			categoriesDto.add(category);
+		}
+		
+		return categoriesDto;
+		
 
+	}
 }

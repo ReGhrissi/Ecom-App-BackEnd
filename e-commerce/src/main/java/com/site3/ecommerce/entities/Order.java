@@ -24,6 +24,7 @@ public class Order implements Serializable {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Date date;
+     
     @OneToMany(mappedBy = "order")
     private Collection<OrderItem> orderItems;
     @ManyToOne

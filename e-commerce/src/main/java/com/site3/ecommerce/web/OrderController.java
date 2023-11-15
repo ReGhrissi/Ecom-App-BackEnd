@@ -1,3 +1,4 @@
+
 package com.site3.ecommerce.web;
 
 import com.site3.ecommerce.dao.*;
@@ -66,7 +67,7 @@ public class OrderController {
         	        System.out.println("nouveau client :"+client.getId());
 
         	        Order order=new Order();
-        	        
+        	   /*     
         	        order.setClient(client);
         	        order.setDate(new Date());
         	        
@@ -88,7 +89,7 @@ public class OrderController {
 	        	        }
         	        
         	        order.setTotalAmount(total);
-        	        
+        	        */
         	         Order orderPOST = orderRepository.save(order);
         	         System.out.println("le nouveau orderPOST :"+orderPOST);
         	         

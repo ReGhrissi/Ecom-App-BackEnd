@@ -37,7 +37,8 @@ public class UserEntity implements Serializable {
 	@Column(nullable=false)
 	private String userId;
 	
-	private String photoName = "unknown.jpg";
+	@Column(nullable=false)
+	private String photoName;
 	
 	@Column(nullable=true, length=50)
 	private String firstName;
@@ -48,8 +49,11 @@ public class UserEntity implements Serializable {
 	@Column(nullable=false, length=120, unique=true)
 	private String email;
 	
-	@Column(nullable=true)
-	private Boolean admin = false;
+	@Column(nullable=false)
+	private Boolean admin;
+	
+	@Column(nullable=false)
+	private Boolean active;
 	
 	@Column(nullable=false) 
 	private String encryptedPassword;

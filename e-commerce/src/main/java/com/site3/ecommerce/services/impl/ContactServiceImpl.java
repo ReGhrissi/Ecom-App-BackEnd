@@ -4,13 +4,13 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.site3.ecommerce.dao.AddressRepository;
+
 import com.site3.ecommerce.dao.ContactRepository;
 import com.site3.ecommerce.dao.UserRepository;
-import com.site3.ecommerce.dto.AddressDto;
+
 import com.site3.ecommerce.dto.ContactDto;
 import com.site3.ecommerce.dto.UserDto;
-import com.site3.ecommerce.entities.AddressEntity;
+
 import com.site3.ecommerce.entities.ContactEntity;
 import com.site3.ecommerce.entities.UserEntity;
 import com.site3.ecommerce.services.ContactService;

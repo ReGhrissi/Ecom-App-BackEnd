@@ -39,8 +39,8 @@ public class CommentEntity implements Serializable {
 	@JoinColumn(name="users_id")
 	private UserEntity user;
 	
-	//@ManyToOne
-	//@JoinColumn(name="product_id")
-	//private Product product;
+	@ManyToOne
+	@JoinColumn(name="products_id")
+	private ProductEntity product;
 
 }

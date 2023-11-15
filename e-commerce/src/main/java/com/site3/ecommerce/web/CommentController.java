@@ -19,8 +19,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
+import com.site3.ecommerce.dao.ProductRepository;
 import com.site3.ecommerce.dto.CommentDto;
+import com.site3.ecommerce.dto.ProductDto;
+import com.site3.ecommerce.entities.ProductEntity;
 import com.site3.ecommerce.requests.CommentRequest;
 import com.site3.ecommerce.responses.CommentResponse;
 import com.site3.ecommerce.services.CommentService;
@@ -32,6 +34,11 @@ public class CommentController {
 
 	@Autowired
 	CommentService commentService;
+	
+	@Autowired
+	ProductRepository productRepository;
+	
+	
 	
 	@GetMapping
 	public ResponseEntity<List<CommentResponse>>getComments(Principal principal) {
@@ -47,18 +54,24 @@ public class CommentController {
 	}
 	
 	
-	@PostMapping(
-			consumes={MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE}, 
-		    produces={MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
-			)
-	public ResponseEntity<CommentResponse> StoreComment(@RequestBody CommentRequest commentRequest, Principal principal) {
+	@PostMapping("/{productId}")
+	public ResponseEntity<CommentResponse> StoreComment(@RequestBody CommentRequest commentRequest,
+														@PathVariable(name="productId") String productId,
+														Principal principal) {
+		
+		ProductEntity productEntity = productRepository.findByProductId(productId);
 		
 		ModelMapper modelMapper = new ModelMapper();
 		
+		//ProductDto productDto = modelMapper.map(productEntity, ProductDto.class);
+		
 		CommentDto commentDto = modelMapper.map(commentRequest, CommentDto.class);
-		CommentDto createComment = commentService.createComment(commentDto, principal.getName());
+		
+		CommentDto createComment = commentService.createComment(commentDto, productEntity ,principal.getName());
 		
 		CommentResponse newComment = modelMapper.map(createComment, CommentResponse.class);
+		
+		//newComment.setProductId(productId);
 		
 		return new ResponseEntity<CommentResponse>(newComment, HttpStatus.CREATED);
 	}

@@ -7,17 +7,13 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.site3.ecommerce.dao.CategoryRepository;
 import com.site3.ecommerce.dao.ProductRepository;
-import com.site3.ecommerce.dto.AddressDto;
 import com.site3.ecommerce.dto.CategoryDto;
 import com.site3.ecommerce.dto.ProductDto;
-import com.site3.ecommerce.dto.UserDto;
-import com.site3.ecommerce.entities.AddressEntity;
 import com.site3.ecommerce.entities.CategoryEntity;
 import com.site3.ecommerce.entities.ProductEntity;
-import com.site3.ecommerce.entities.UserEntity;
+
 import com.site3.ecommerce.services.ProductService;
 import com.site3.ecommerce.shared.Utils;
 
@@ -49,7 +45,7 @@ public class ProductServiceImpl implements ProductService {
 		return productsDto;
 	}
 	
-	
+//-------------------------------------------------------------------------------------------	
 	@Override
 	public List<ProductDto> getAllProductsByCategory(String categoryId) {
 		
@@ -64,8 +60,81 @@ public class ProductServiceImpl implements ProductService {
 		return productsDto;
 	}
 
+	@Override
+	public List<ProductDto> getAllSelectedProducts() {
+		
+		List<ProductEntity> products = (List<ProductEntity>) productRepository.findBySelectedProductIsTrue();
+		
+		Type listType = new TypeToken<List<ProductDto>>() {}.getType();
+		
+		List<ProductDto> productsDto = new ModelMapper().map(products, listType);
+		
+		return productsDto;
+	}
 	
-	
+	@Override
+	public List<ProductDto> getAllPromotionProducts() {
+		
+		List<ProductEntity> products = (List<ProductEntity>) productRepository.findByPromotionProductIsTrue();
+		
+		Type listType = new TypeToken<List<ProductDto>>() {}.getType();
+		
+		List<ProductDto> productsDto = new ModelMapper().map(products, listType);
+		
+		return productsDto;
+	}
+
+	@Override
+	public List<ProductDto> getAllAvailableProducts() {
+		
+		List<ProductEntity> products = (List<ProductEntity>) productRepository.findByAvailableProductIsTrue();
+		
+		Type listType = new TypeToken<List<ProductDto>>() {}.getType();
+		
+		List<ProductDto> productsDto = new ModelMapper().map(products, listType);
+		
+		return productsDto;
+	}
+
+	@Override
+	public List<ProductDto> getAllTendancyProducts() {
+		
+		List<ProductEntity> products = (List<ProductEntity>) productRepository.findByTendancyProductIsTrue();
+		
+		Type listType = new TypeToken<List<ProductDto>>() {}.getType();
+		
+		List<ProductDto> productsDto = new ModelMapper().map(products, listType);
+		
+		return productsDto;
+	}
+
+	@Override
+	public List<ProductDto> getAllNewProducts() {
+		
+		List<ProductEntity> products = (List<ProductEntity>) productRepository.findByNewProductIsTrue();
+		
+		Type listType = new TypeToken<List<ProductDto>>() {}.getType();
+		
+		List<ProductDto> productsDto = new ModelMapper().map(products, listType);
+		
+		return productsDto;
+	}
+
+	@Override
+	public List<ProductDto> getAllFuturProducts() {
+		
+		List<ProductEntity> products = (List<ProductEntity>) productRepository.findByFuturProductIsTrue();
+		
+		Type listType = new TypeToken<List<ProductDto>>() {}.getType();
+		
+		List<ProductDto> productsDto = new ModelMapper().map(products, listType);
+		
+		return productsDto;
+	}
+
+
+
+//--------------------------------------------------------------------------------------------	
 	@Override
 	public ProductDto createProduct(ProductDto product, String categoryId) {
 		
@@ -98,16 +167,63 @@ public class ProductServiceImpl implements ProductService {
 		return productDto;
 	}
 
+	
+	@Override
+	public ProductDto updateProduct(String productId, ProductDto productDto) {
+		
+		ProductEntity productEntity = productRepository.findByProductId(productId);
+		
+	    if (productEntity == null) 
+	    {
+	        throw new RuntimeException("ce produit n'existe pas !");
+	    }
+		
+
+	    // Mettez à jour les propriétés de l'entité UserEntity
+	    productEntity.setName(productDto.getName());
+	    productEntity.setDescription(productDto.getDescription());
+	    productEntity.setPrice(productDto.getPrice());
+	    productEntity.setCurrentPrice(productDto.getCurrentPrice());
+	    productEntity.setStock(productDto.getStock());
+	    productEntity.setPromotionProduct(productDto.getPromotionProduct());
+	    productEntity.setPromotionRate(productDto.getPromotionRate());
+	    productEntity.setNewProduct(productDto.getNewProduct());
+	    productEntity.setFuturProduct(productDto.getFuturProduct());
+	    productEntity.setAvailableProduct(productDto.getAvailableProduct());
+	    productEntity.setSelectedProduct(productDto.getSelectedProduct());
+	    productEntity.setTendancyProduct(productDto.getTendancyProduct());
+	    
+	    ProductEntity productUpdated = productRepository.save(productEntity);
+		
+		ModelMapper modelMapper = new ModelMapper();	
+	
+		ProductDto product = new ProductDto();
+
+		product = modelMapper.map(productUpdated, ProductDto.class);
+		
+		return product;
+	}
+	
+	
 	@Override
 	public void deleteProduct(String productId) {
 		
 		ProductEntity product = productRepository.findByProductId(productId);
 		
-		if(product == null) throw new RuntimeException("Product not found");
 		
-		productRepository.delete(product);
+
+		if(product == null) throw new RuntimeException("Product not found !");
+		
+		long  ID = product.getId();
+		
+		//System.out.println("product :"+ product.toString());
+		
+		productRepository.deleteById(1);
 
 	}
+
+
+
 
 
 

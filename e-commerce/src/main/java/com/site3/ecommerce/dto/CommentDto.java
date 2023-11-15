@@ -3,9 +3,7 @@ package com.site3.ecommerce.dto;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.Column;
 
-import com.site3.ecommerce.entities.Product;
 
 import lombok.Data;
 
@@ -24,6 +22,6 @@ public class CommentDto implements Serializable {
 	
 	private UserDto user;
 	
-	//private Product product;
+	private ProductDto product;
 
 }

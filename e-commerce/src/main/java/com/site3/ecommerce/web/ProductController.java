@@ -71,11 +71,8 @@ public class ProductController {
 	
 //-------------------------------------------Post Product ------------------------------
 	
-	@PostMapping(
-			consumes={MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE}, 
-		    produces={MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
-			)
-	public ResponseEntity<ProductResponse> StoreProduct(@RequestBody ProductRequest productRequest, String categoryId) {
+	@PostMapping("/{categoryId}")
+	public ResponseEntity<ProductResponse> StoreProduct(@RequestBody ProductRequest productRequest,@PathVariable(name="categoryId") String categoryId) {
 		
 		ModelMapper modelMapper = new ModelMapper();
 		
@@ -90,8 +87,25 @@ public class ProductController {
 //-------------------------------------- PUT Product -----------------------------
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<String> updateProduct(@PathVariable(name="id") String productId) {
-		return new ResponseEntity<>("update Product", HttpStatus.ACCEPTED);
+	public ResponseEntity<ProductResponse> updateProduct(@PathVariable(name="id") String productId, 
+														@RequestBody ProductRequest productRequest) {
+		
+		
+		ProductDto productDto = new ProductDto();
+		
+		//BeanUtils.copyProperties(userRequest, userDto);
+		ModelMapper modelMapper = new ModelMapper();
+		productDto = modelMapper.map(productRequest, ProductDto.class);
+		
+		ProductDto updateProduct = productService.updateProduct(productId, productDto);
+		
+		ProductResponse productResponse = new ProductResponse();
+		
+		//BeanUtils.copyProperties(updateUser, userResponse);
+		productResponse = modelMapper.map(updateProduct, ProductResponse.class);
+		
+		return new ResponseEntity<ProductResponse>(productResponse, HttpStatus.ACCEPTED);
+
 	}
 
 //--------------------------------------DELETE Product ------------------------------
@@ -109,24 +123,97 @@ public class ProductController {
 	
 	@GetMapping(path="/photoProduct/{id}",produces = MediaType.IMAGE_JPEG_VALUE)
 	
-	public byte[] getPhoto(@PathVariable("id") Long id) throws Exception
+	public byte[] getPhoto(@PathVariable("id") String id) throws Exception
 	{
-		ProductEntity p = productRepository.findById(id).get();
+		ProductEntity p = productRepository.findByProductId(id);
 		return Files.readAllBytes(Paths.get(System.getProperty("user.home")+"/Images_Projets/Projet_Ecommerce/Produits/"+p.getPhotoName()));
 		
 		
 	}
 	
 	@PostMapping(path="/uploadPhoto/{id}")
-	public  void uploadPhoto(MultipartFile file,@PathVariable Long id) throws Exception
+	public  void uploadPhoto(MultipartFile file,@PathVariable String id) throws Exception
 	{
 		
-		ProductEntity p = productRepository.findById(id).get();
+		ProductEntity p = productRepository.findByProductId(id);
 		p.setPhotoName(id+".jpg");
 		Files.write(Paths.get(System.getProperty("user.home")+"/Images_Projets/Projet_Ecommerce/Produits/"+p.getPhotoName()),file.getBytes());
 		productRepository.save(p);
 	
 	}
+//--------------------------------------------------------------------
 	
+	@GetMapping(path="/selectedProducts")
+	public ResponseEntity<List<ProductResponse>>getSelectedProducts() {
+		
+		List<ProductDto> products = productService.getAllSelectedProducts();
+		
+		Type listType = new TypeToken<List<ProductResponse>>() {}.getType();
+		List<ProductResponse> productsResponse = new ModelMapper().map(products, listType);
+		
+		return new ResponseEntity<List<ProductResponse>>(productsResponse, HttpStatus.OK);
+		
+	}
+	
+	
+	@GetMapping(path="/promoProducts")
+	public ResponseEntity<List<ProductResponse>>getPromotionProducts() {
+		
+		List<ProductDto> products = productService.getAllPromotionProducts();
+		
+		Type listType = new TypeToken<List<ProductResponse>>() {}.getType();
+		List<ProductResponse> productsResponse = new ModelMapper().map(products, listType);
+		
+		return new ResponseEntity<List<ProductResponse>>(productsResponse, HttpStatus.OK);
+		
+	}
+	
+	@GetMapping(path="/dispoProducts")
+	public ResponseEntity<List<ProductResponse>>getAvailableProducts() {
+		
+		List<ProductDto> products = productService.getAllAvailableProducts();
+		
+		Type listType = new TypeToken<List<ProductResponse>>() {}.getType();
+		List<ProductResponse> productsResponse = new ModelMapper().map(products, listType);
+		
+		return new ResponseEntity<List<ProductResponse>>(productsResponse, HttpStatus.OK);
+		
+	}
+	
+	@GetMapping(path="/tendancyProducts")
+	public ResponseEntity<List<ProductResponse>>getTendancyProducts() {
+		
+		List<ProductDto> products = productService.getAllTendancyProducts();
+		
+		Type listType = new TypeToken<List<ProductResponse>>() {}.getType();
+		List<ProductResponse> productsResponse = new ModelMapper().map(products, listType);
+		
+		return new ResponseEntity<List<ProductResponse>>(productsResponse, HttpStatus.OK);
+		
+	}
+	
+	@GetMapping(path="/newProducts")
+	public ResponseEntity<List<ProductResponse>>getNewProducts() {
+		
+		List<ProductDto> products = productService.getAllNewProducts();
+		
+		Type listType = new TypeToken<List<ProductResponse>>() {}.getType();
+		List<ProductResponse> productsResponse = new ModelMapper().map(products, listType);
+		
+		return new ResponseEntity<List<ProductResponse>>(productsResponse, HttpStatus.OK);
+		
+	}
+	
+	@GetMapping(path="/futurProducts")
+	public ResponseEntity<List<ProductResponse>>getFuturProducts() {
+		
+		List<ProductDto> products = productService.getAllFuturProducts();
+		
+		Type listType = new TypeToken<List<ProductResponse>>() {}.getType();
+		List<ProductResponse> productsResponse = new ModelMapper().map(products, listType);
+		
+		return new ResponseEntity<List<ProductResponse>>(productsResponse, HttpStatus.OK);
+		
+	}
 	
 }

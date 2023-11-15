@@ -31,21 +31,26 @@ public interface ProductRepository extends PagingAndSortingRepository<ProductEnt
 	@RestResource(path = "/productsByKeyword")
 	public List<Product> findByNameContains(@Param("mc") String mc); // methode de Spring Data
 	
+	public List<ProductEntity> findBySelectedProductIsTrue(); // methode de Spring Data
 	
-	@RestResource(path = "/selectedProducts")
-	public List<Product> findBySelectedIsTrue(); // methode de Spring Data
+	public List<ProductEntity> findByPromotionProductIsTrue();
+
+	public List<ProductEntity> findByAvailableProductIsTrue();
 	
-	@RestResource(path = "/promoProducts")
-	public List<Product> findByPromotionIsTrue();
+	public List<ProductEntity> findByTendancyProductIsTrue();
 	
-	@RestResource(path = "/dispoProducts")
-	public List<Product> findByAvailableIsTrue();
+	public List<ProductEntity> findByNewProductIsTrue();
+	
+	public List<ProductEntity> findByFuturProductIsTrue();
 	
 //-------------------------------------------------------------
 	
 	List<ProductEntity> findByCategory(CategoryEntity currentCategory);
 	
 	ProductEntity findByProductId(String productId);
+
+
+	void deleteById(long id);
 
 
 }

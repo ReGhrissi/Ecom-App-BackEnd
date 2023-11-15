@@ -34,7 +34,7 @@ public interface CategoryRepository extends PagingAndSortingRepository<CategoryE
 //	@Query(value="SELECT * FROM users", nativeQuery=true)
 //	Page<UserEntity> findAllUsers(Pageable pageableRequest);
 	
-	
+/*	
 	@Query("SELECT category FROM CategoryEntity Category")
 	Page<CategoryEntity> findAllCategories(Pageable pageableRequest);
 
@@ -46,6 +46,6 @@ public interface CategoryRepository extends PagingAndSortingRepository<CategoryE
 		
 	@Query(value="SELECT * FROM categories c WHERE (c.name LIKE %:search% OR c.description LIKE %:search%)", nativeQuery=true)
 	Page<CategoryEntity> findAllCategoryByCriteria(Pageable pageableRequest, @Param("search") String search, @Param("status") int status);
-	
+*/
 
 }

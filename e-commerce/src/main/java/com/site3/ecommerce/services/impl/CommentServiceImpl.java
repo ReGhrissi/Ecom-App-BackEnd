@@ -11,8 +11,10 @@ import org.springframework.stereotype.Service;
 import com.site3.ecommerce.dao.CommentRepository;
 import com.site3.ecommerce.dao.UserRepository;
 import com.site3.ecommerce.dto.CommentDto;
+import com.site3.ecommerce.dto.ProductDto;
 import com.site3.ecommerce.dto.UserDto;
 import com.site3.ecommerce.entities.CommentEntity;
+import com.site3.ecommerce.entities.ProductEntity;
 import com.site3.ecommerce.entities.UserEntity;
 import com.site3.ecommerce.services.CommentService;
 import com.site3.ecommerce.shared.Utils;
@@ -48,16 +50,18 @@ public class CommentServiceImpl implements CommentService{
 	
 	
 	@Override
-	public CommentDto createComment(CommentDto comment, String email) {
+	public CommentDto createComment(CommentDto comment, ProductEntity productEntity, String email) {
 		
 		UserEntity currentUser = userRepository.findByEmail(email);
 		
 		ModelMapper modelMapper = new ModelMapper();
+		ProductDto productDto = modelMapper.map(productEntity, ProductDto.class);
 		UserDto userDto = modelMapper.map(currentUser, UserDto.class);
 		
 		comment.setCommentId(util.generateStringId(30));
+		comment.setProduct(productDto);
 		comment.setUser(userDto);
-		
+
 		CommentEntity commentEntity = modelMapper.map(comment, CommentEntity.class); 
 		
 		CommentEntity newComment = commentRepository.save(commentEntity);
