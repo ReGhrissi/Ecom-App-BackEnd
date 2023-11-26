@@ -2,9 +2,27 @@
 package com.site3.ecommerce.web;
 
 import com.site3.ecommerce.dao.*;
+import com.site3.ecommerce.dto.CategoryDto;
+import com.site3.ecommerce.dto.OrderDto;
+import com.site3.ecommerce.dto.ProductDto;
+import com.site3.ecommerce.dto.UserDto;
 import com.site3.ecommerce.entities.*;
+import com.site3.ecommerce.exceptions.UserException;
+import com.site3.ecommerce.requests.OrderRequest;
+import com.site3.ecommerce.requests.UserRequest;
+import com.site3.ecommerce.responses.CategoryResponse;
+import com.site3.ecommerce.responses.ErrorMessages;
+import com.site3.ecommerce.responses.OrderResponse;
+import com.site3.ecommerce.responses.ProductResponse;
+import com.site3.ecommerce.responses.UserResponse;
+import com.site3.ecommerce.services.OrderService;
+import com.site3.ecommerce.services.UserService;
 
-import org.hibernate.mapping.List;
+import lombok.Data;
+
+import java.util.List;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -13,21 +31,26 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.http.HttpStatus;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-import javax.servlet.http.HttpServletRequest;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+
+import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.security.Principal;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
-@CrossOrigin("*")
+
+@CrossOrigin(origins="*")
 @RestController
+@RequestMapping("/orders")
 public class OrderController {
+	
+	@Autowired
+	OrderService orderService;
 	
     @Autowired
     private ProductRepository productRepository;
@@ -39,6 +62,153 @@ public class OrderController {
     private OrderItemRepository orderItemRepository;
     
     
+    @PostMapping()
+	public ResponseEntity<OrderResponse> createOrder(@RequestBody OrderRequest orderRequest, Principal principal) throws Exception {
+		
+	//	if(userRequest.getFirstName().isEmpty()) throw new UserException(ErrorMessages.MISSING_REQUIRED_FIELD.getErrorMessage());
+		
+		ModelMapper modelMapper = new ModelMapper();
+		OrderDto orderDto = modelMapper.map(orderRequest, OrderDto.class);
+		
+		OrderDto createOrder = orderService.createOrder(orderDto, orderRequest, principal.getName());
+		
+		OrderResponse orderResponse =  modelMapper.map(createOrder, OrderResponse.class);
+		
+		return new ResponseEntity<OrderResponse>(orderResponse, HttpStatus.CREATED);
+		
+		
+	}
+    
+ //-------------------------------------------------------------------------------------------------   
+	@PutMapping(path="/{id}")
+	public ResponseEntity<OrderResponse> updateUser(@PathVariable String id, @RequestBody OrderRequest orderRequest) {
+		
+		OrderDto orderDto = new OrderDto();
+
+		ModelMapper modelMapper = new ModelMapper();
+		
+		orderDto = modelMapper.map(orderRequest, OrderDto.class);
+		
+		OrderDto updateOrder = orderService.updateOrder(id, orderDto);
+		
+		OrderResponse orderResponse = new OrderResponse();
+		
+		orderResponse = modelMapper.map(updateOrder, OrderResponse.class);
+		
+		return new ResponseEntity<OrderResponse>(orderResponse, HttpStatus.ACCEPTED);
+	}
+	
+ //--------------------------------------------------------------------------------------------------------  
+	@GetMapping()
+	public ResponseEntity<List<OrderResponse>> getAllOrders() {
+		
+		List<OrderResponse> ordersResponse = new ArrayList<>();
+		
+		List<OrderDto> orders = orderService.getOrders();
+		
+		for(OrderDto orderDto: orders) {
+			
+			ModelMapper modelMapper = new ModelMapper();
+			OrderResponse orderResponse =  modelMapper.map(orderDto, OrderResponse.class);
+			
+			ordersResponse.add(orderResponse);
+		}
+		
+		return new ResponseEntity<List<OrderResponse>>(ordersResponse, HttpStatus.OK);
+	}
+	
+//-----------------------------------------------------------------------------------------------------------
+	@GetMapping(path="/{userId}")
+	public ResponseEntity<List<OrderResponse>> getOrdersByUser(@PathVariable String userId) {
+		
+		List<OrderResponse> ordersResponse = new ArrayList<>();
+		
+		List<OrderDto> orders = orderService.getOrdersByUser(userId);
+		
+		for(OrderDto orderDto: orders) {
+			
+			ModelMapper modelMapper = new ModelMapper();
+			OrderResponse orderResponse =  modelMapper.map(orderDto, OrderResponse.class);
+			
+			ordersResponse.add(orderResponse);
+		}
+		
+		return new ResponseEntity<List<OrderResponse>>(ordersResponse, HttpStatus.OK);
+	}
+//-------------------------------------------------------------------------------------------------------------
+	@GetMapping(path="/registeredOrders")
+	public ResponseEntity<List<OrderResponse>>getENREGISTREEs() {
+		
+		List<OrderDto> orders = orderService.getAllRegistereds();
+		
+		Type listType = new TypeToken<List<OrderResponse>>() {}.getType();
+		List<OrderResponse> ordersResponse = new ModelMapper().map(orders, listType);
+		
+		return new ResponseEntity<List<OrderResponse>>(ordersResponse, HttpStatus.OK);
+		 
+	}
+	
+	@GetMapping(path="/underTreatementOrders")
+	public ResponseEntity<List<OrderResponse>>getUNDER_TREATEMENTs() {
+		
+		List<OrderDto> orders = orderService.getAllUnderTreatements();
+		
+		Type listType = new TypeToken<List<OrderResponse>>() {}.getType();
+		List<OrderResponse> ordersResponse = new ModelMapper().map(orders, listType);
+		
+		return new ResponseEntity<List<OrderResponse>>(ordersResponse, HttpStatus.OK);
+		
+	}
+	
+	@GetMapping(path="/cancelledOrders")
+	public ResponseEntity<List<OrderResponse>>getCANCELLEDs() {
+		
+		List<OrderDto> orders = orderService.getAllCancelleds();
+		
+		Type listType = new TypeToken<List<OrderResponse>>() {}.getType();
+		List<OrderResponse> ordersResponse = new ModelMapper().map(orders, listType);
+		
+		return new ResponseEntity<List<OrderResponse>>(ordersResponse, HttpStatus.OK);
+		
+	}
+	
+	@GetMapping(path="/sentOrders")
+	public ResponseEntity<List<OrderResponse>>getSENTs() {
+		
+		List<OrderDto> orders = orderService.getAllSents();
+		
+		Type listType = new TypeToken<List<OrderResponse>>() {}.getType();
+		List<OrderResponse> ordersResponse = new ModelMapper().map(orders, listType);
+		
+		return new ResponseEntity<List<OrderResponse>>(ordersResponse, HttpStatus.OK);
+		
+	}
+	
+	@GetMapping(path="/deliveredOrders")
+	public ResponseEntity<List<OrderResponse>>getDELIVEREds() {
+		
+		List<OrderDto> orders = orderService.getAllDelivereds();
+		
+		Type listType = new TypeToken<List<OrderResponse>>() {}.getType();
+		List<OrderResponse> ordersResponse = new ModelMapper().map(orders, listType);
+		
+		return new ResponseEntity<List<OrderResponse>>(ordersResponse, HttpStatus.OK);
+		
+	}
+	
+	@GetMapping(path="/returnedOrders")
+	public ResponseEntity<List<OrderResponse>>getRETURNEDs() {
+		
+		List<OrderDto> orders = orderService.getAllReturneds();
+		
+		Type listType = new TypeToken<List<OrderResponse>>() {}.getType();
+		List<OrderResponse> ordersResponse = new ModelMapper().map(orders, listType);
+		
+		return new ResponseEntity<List<OrderResponse>>(ordersResponse, HttpStatus.OK);
+		
+	}
+
+ /*   
     @RequestMapping(path = "/orders", method = { RequestMethod.GET, RequestMethod.POST })
     public ResponseEntity<?> handleOrdersRequest_1(HttpServletRequest request, @RequestBody(required = false) OrderForm orderForm)
     {
@@ -67,6 +237,7 @@ public class OrderController {
         	        System.out.println("nouveau client :"+client.getId());
 
         	        Order order=new Order();
+       */
         	   /*     
         	        order.setClient(client);
         	        order.setDate(new Date());
@@ -90,6 +261,7 @@ public class OrderController {
         	        
         	        order.setTotalAmount(total);
         	        */
+    /*
         	         Order orderPOST = orderRepository.save(order);
         	         System.out.println("le nouveau orderPOST :"+orderPOST);
         	         
@@ -140,7 +312,7 @@ public class OrderController {
     }
     
     
-    
+    */
     
    /* 
     // @GetMapping("/orders/{orderId}")
@@ -228,3 +400,6 @@ public class OrderController {
  */
 
 }
+
+
+

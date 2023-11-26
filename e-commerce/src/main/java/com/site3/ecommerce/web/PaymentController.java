@@ -27,7 +27,7 @@ public class PaymentController {
 	private PayementRepository payementRepository;
 	
 	
-	
+/*	
 	@PostMapping("/payments")
     public Payment savePayment(@RequestBody PaymentForm paymentForm)
     {
@@ -44,6 +44,7 @@ public class PaymentController {
 	@RequestMapping(path = "/payments/{paymentId}", method = { RequestMethod.GET, RequestMethod.PATCH })
     public ResponseEntity<?> handleeOrdersRequest_2(HttpServletRequest request , @PathVariable Long paymentId, @RequestBody(required = false) PaymentForm paymentForm) 
     {
+ */
 		/*
         if (request.getMethod().equals("GET")) 
         {
@@ -54,7 +55,7 @@ public class PaymentController {
  		   return ResponseEntity.ok(orderGET);
         } 
         */
-        
+  /*      
         if (request.getMethod().equals("PATCH")) 
         {
         	Payment paymentPATCH = new Payment();
@@ -79,6 +80,6 @@ public class PaymentController {
     	}
     }
     
-	
+*/	
 
 }

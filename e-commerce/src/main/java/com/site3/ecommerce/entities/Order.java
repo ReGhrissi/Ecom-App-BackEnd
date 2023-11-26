@@ -14,7 +14,7 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
 @Entity
-@Table(name="orders")
+//@Table(name="orders")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

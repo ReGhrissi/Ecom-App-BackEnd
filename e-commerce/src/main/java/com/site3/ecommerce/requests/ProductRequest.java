@@ -9,6 +9,10 @@ import lombok.Data;
 @Data
 public class ProductRequest {
 	
+	private long id;
+	
+	private String productId;
+	
 	@NotNull(message=" Le champ name ne doit pas etre null !")
 	private String name;
 	

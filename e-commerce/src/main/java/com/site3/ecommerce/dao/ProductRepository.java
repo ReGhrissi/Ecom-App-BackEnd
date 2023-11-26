@@ -49,6 +49,7 @@ public interface ProductRepository extends PagingAndSortingRepository<ProductEnt
 	
 	ProductEntity findByProductId(String productId);
 
+	ProductEntity findById(long Id);
 
 	void deleteById(long id);
 

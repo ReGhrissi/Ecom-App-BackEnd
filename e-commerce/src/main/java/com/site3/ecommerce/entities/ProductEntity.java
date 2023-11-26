@@ -14,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -67,5 +68,6 @@ public class ProductEntity implements Serializable {
 	@OneToMany(mappedBy="product", fetch = FetchType.EAGER, cascade=CascadeType.ALL)
 	private List<CommentEntity> comments;
 	
-
+	@OneToOne(mappedBy="product", fetch = FetchType.EAGER, cascade=CascadeType.ALL)
+	private OrderItemEntity orderItem;
 }

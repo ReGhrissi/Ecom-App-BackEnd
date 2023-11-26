@@ -8,6 +8,7 @@ import lombok.Data;
 @Data
 public class ProductResponse {
 	
+	private long id;
 	private String productId;
 	private String photoName;
 	private String name;
