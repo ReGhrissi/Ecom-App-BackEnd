@@ -19,11 +19,11 @@ public class ProductRequest {
 	@NotNull(message="Le champ description ne doit pas etre null !")
 	private String description;
 	
-	@NotNull(message="Le champ price ne doit pas etre null !")
+	//@NotNull(message="Le champ price ne doit pas etre null !")
 	private double price;
 	
-	@NotNull(message="Le champ currentPrice ne doit pas etre null !")
-	private double currentPrice;
+	//@NotNull(message="Le champ currentPrice ne doit pas etre null !")
+	//private double currentPrice;
 	
 	private int stock;
 	private double promotionRate;

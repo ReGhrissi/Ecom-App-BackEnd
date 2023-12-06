@@ -1,19 +1,24 @@
 package com.site3.ecommerce.services.impl;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import com.site3.ecommerce.dao.CategoryRepository;
 import com.site3.ecommerce.dao.ProductRepository;
 import com.site3.ecommerce.dto.CategoryDto;
 import com.site3.ecommerce.dto.ProductDto;
+import com.site3.ecommerce.dto.UserDto;
 import com.site3.ecommerce.entities.CategoryEntity;
 import com.site3.ecommerce.entities.ProductEntity;
-
+import com.site3.ecommerce.entities.UserEntity;
 import com.site3.ecommerce.services.ProductService;
 import com.site3.ecommerce.shared.Utils;
 
@@ -30,8 +35,90 @@ public class ProductServiceImpl implements ProductService {
 	
 	@Autowired
 	Utils util;
-	
+//-------------------------------------------------------------------------------------	
+	@Override
+	public int getTotalProductsCount() {
+		
+		return productRepository.getTotalProductsCount();
+	}
 
+//-----------------------------------------------------------------------------------------	
+	@Override
+	public List<ProductDto> getProducts(int page, int limit) {
+		
+		if(page > 0) page = page - 1;
+		
+		List<ProductDto> productsDto = new ArrayList<>();
+		
+		Pageable pageableRequest = PageRequest.of(page, limit);
+		
+		Page<ProductEntity> productPage;
+	/*	
+		if(search.isEmpty()) {
+			userPage = userRepository.findAllUsers(pageableRequest);
+		}
+		else {
+			
+			userPage = userRepository.findAllUserByCriteria(pageableRequest, search, status);
+		}
+		*/
+		productPage = productRepository.findAllProducts(pageableRequest);
+		
+		List<ProductEntity> products = productPage.getContent();
+		
+		for(ProductEntity productEntity: products) {
+			
+			ModelMapper modelMapper = new ModelMapper();	
+			ProductDto product = modelMapper.map(productEntity, ProductDto.class);
+			
+			productsDto.add(product);
+		}
+		
+		return productsDto;
+	}
+	
+//----------------------------------------------------------------------------------	
+	@Override
+	public int getTotalSearchProductsCount(String search) {
+		
+		return productRepository.getTotalProductsCountByKeyword(search);
+	}
+//--------------------------------------------------------------------------------------
+	@Override
+	public List<ProductDto> getSearchProducts(int page, int limit, String search) {
+		
+		if(page > 0) page = page - 1;
+		
+		List<ProductDto> productsDto = new ArrayList<>();
+		
+		Pageable pageableRequest = PageRequest.of(page, limit);
+		
+		Page<ProductEntity> productPage;
+	/*	
+		if(search.isEmpty()) {
+			userPage = userRepository.findAllUsers(pageableRequest);
+		}
+		else {
+			
+			userPage = userRepository.findAllUserByCriteria(pageableRequest, search, status);
+		}
+	*/
+		productPage = productRepository.findAllProductsByKeyword(pageableRequest, search);
+		
+		List<ProductEntity> products = productPage.getContent();
+		
+		for(ProductEntity productEntity: products) {
+			
+			ModelMapper modelMapper = new ModelMapper();	
+			ProductDto product = modelMapper.map(productEntity, ProductDto.class);
+			
+			productsDto.add(product);
+		}
+		
+		return productsDto;
+	}
+
+//--------------------------------------------------------------------------------------
 	@Override
 	public List<ProductDto> getAllProducts() {
 		
@@ -45,10 +132,18 @@ public class ProductServiceImpl implements ProductService {
 		return productsDto;
 	}
 	
-//-------------------------------------------------------------------------------------------	
+//===========================================================================================
 	@Override
-	public List<ProductDto> getAllProductsByCategory(String categoryId) {
+	public int getTotalProductsCountByCategory(String categoryId) {
 		
+		CategoryEntity currentCategory = categoryRepository.findByCategoryId(categoryId);
+		
+		return productRepository.getTotalProductsCountByCategory(currentCategory);		
+	}
+	
+	@Override
+	public List<ProductDto> getAllProductsByCategory(String categoryId, int page, int limit) {
+		/*
 		CategoryEntity currentCategory = categoryRepository.findByCategoryId(categoryId);
 		
 		List<ProductEntity> products = productRepository.findByCategory(currentCategory);
@@ -58,11 +153,195 @@ public class ProductServiceImpl implements ProductService {
 		List<ProductDto> productsDto = new ModelMapper().map(products, listType);
 		
 		return productsDto;
+		*/
+		CategoryEntity currentCategory = categoryRepository.findByCategoryId(categoryId);
+		
+		if(page > 0) page = page - 1;
+		
+		List<ProductDto> productsDto = new ArrayList<>();
+		
+		Pageable pageableRequest = PageRequest.of(page, limit);
+		
+		Page<ProductEntity> productPage;
+
+		productPage = productRepository.findByCategory(currentCategory, pageableRequest);
+		
+		List<ProductEntity> products = productPage.getContent();
+		
+		for(ProductEntity productEntity: products) {
+			
+			ModelMapper modelMapper = new ModelMapper();	
+			ProductDto product = modelMapper.map(productEntity, ProductDto.class);
+			
+			productsDto.add(product);
+		}
+		
+		return productsDto;
+		
+	}
+	
+  /************************************************************************/
+	@Override
+	public int getTotalPromotionProductsCountByCategory(String categoryId) {
+		
+		CategoryEntity currentCategory = categoryRepository.findByCategoryId(categoryId);
+		
+		return productRepository.getTotalPromotionProductsCountByCategory(currentCategory);
 	}
 
 	@Override
-	public List<ProductDto> getAllSelectedProducts() {
+	public List<ProductDto> getPromotionProductsByCategory(String categoryId, int page, int limit) {
 		
+		CategoryEntity currentCategory = categoryRepository.findByCategoryId(categoryId);
+		
+		if(page > 0) page = page - 1;
+		
+		List<ProductDto> productsDto = new ArrayList<>();
+		
+		Pageable pageableRequest = PageRequest.of(page, limit);
+		
+		Page<ProductEntity> productPage;
+
+		productPage = productRepository.findByCategoryAndPromotionProductIsTrue(currentCategory, pageableRequest);
+		
+		List<ProductEntity> products = productPage.getContent();
+		
+		for(ProductEntity productEntity: products) {
+			
+			ModelMapper modelMapper = new ModelMapper();	
+			ProductDto product = modelMapper.map(productEntity, ProductDto.class);
+			
+			productsDto.add(product);
+		}
+		
+		return productsDto;
+		
+	}
+	
+  /*************************************************************************/
+	@Override
+	public int getTotalNewProductsCountByCategory(String categoryId) {
+		
+		CategoryEntity currentCategory = categoryRepository.findByCategoryId(categoryId);
+		
+		return productRepository.getTotalNewProductsCountByCategory(currentCategory);
+	}
+
+	@Override
+	public List<ProductDto> getNewProductsByCategory(String categoryId, int page, int limit) {
+
+		CategoryEntity currentCategory = categoryRepository.findByCategoryId(categoryId);
+		
+		if(page > 0) page = page - 1;
+		
+		List<ProductDto> productsDto = new ArrayList<>();
+		
+		Pageable pageableRequest = PageRequest.of(page, limit);
+		
+		Page<ProductEntity> productPage;
+
+		productPage = productRepository.findByCategoryAndNewProductIsTrue(currentCategory, pageableRequest);
+		
+		List<ProductEntity> products = productPage.getContent();
+		
+		for(ProductEntity productEntity: products) {
+			
+			ModelMapper modelMapper = new ModelMapper();	
+			ProductDto product = modelMapper.map(productEntity, ProductDto.class);
+			
+			productsDto.add(product);
+		}
+		
+		return productsDto;
+		
+	}
+	
+  /******************************************************************************/
+	@Override
+	public int getTotalTendancyProductsCountByCategory(String categoryId) {
+		
+		CategoryEntity currentCategory = categoryRepository.findByCategoryId(categoryId);
+		
+		return productRepository.getTotalTendancyProductsCountByCategory(currentCategory);
+	}
+
+	@Override
+	public List<ProductDto> getTendancyProductsByCategory(String categoryId, int page, int limit) {
+
+		CategoryEntity currentCategory = categoryRepository.findByCategoryId(categoryId);
+		
+		if(page > 0) page = page - 1;
+		
+		List<ProductDto> productsDto = new ArrayList<>();
+		
+		Pageable pageableRequest = PageRequest.of(page, limit);
+		
+		Page<ProductEntity> productPage;
+
+		productPage = productRepository.findByCategoryAndTendancyProductIsTrue(currentCategory, pageableRequest);
+		
+		List<ProductEntity> products = productPage.getContent();
+		
+		for(ProductEntity productEntity: products) {
+			
+			ModelMapper modelMapper = new ModelMapper();	
+			ProductDto product = modelMapper.map(productEntity, ProductDto.class);
+			
+			productsDto.add(product);
+		}
+		
+		return productsDto;
+		
+	}
+	
+  /******************************************************************************/
+	@Override
+	public int getTotalFuturProductsCountByCategory(String categoryId) {
+		
+		CategoryEntity currentCategory = categoryRepository.findByCategoryId(categoryId);
+		
+		return productRepository.getTotalFuturProductsCountByCategory(currentCategory);
+	}
+
+	@Override
+	public List<ProductDto> getFuturProductsByCategory(String categoryId, int page, int limit) {
+
+		CategoryEntity currentCategory = categoryRepository.findByCategoryId(categoryId);
+		
+		if(page > 0) page = page - 1;
+		
+		List<ProductDto> productsDto = new ArrayList<>();
+		
+		Pageable pageableRequest = PageRequest.of(page, limit);
+		
+		Page<ProductEntity> productPage;
+
+		productPage = productRepository.findByCategoryAndFuturProductIsTrue(currentCategory, pageableRequest);
+		
+		List<ProductEntity> products = productPage.getContent();
+		
+		for(ProductEntity productEntity: products) {
+			
+			ModelMapper modelMapper = new ModelMapper();	
+			ProductDto product = modelMapper.map(productEntity, ProductDto.class);
+			
+			productsDto.add(product);
+		}
+		
+		return productsDto;
+		
+	}
+
+	
+//===============================================================================================
+	@Override
+	public int getTotalSelectedProductsCount() {
+		return productRepository.getTotalSelectedProductsCount();
+	}
+			
+	@Override
+	public List<ProductDto> getAllSelectedProducts(int page, int limit) {
+		/*
 		List<ProductEntity> products = (List<ProductEntity>) productRepository.findBySelectedProductIsTrue();
 		
 		Type listType = new TypeToken<List<ProductDto>>() {}.getType();
@@ -70,11 +349,40 @@ public class ProductServiceImpl implements ProductService {
 		List<ProductDto> productsDto = new ModelMapper().map(products, listType);
 		
 		return productsDto;
+		*/
+		
+		if(page > 0) page = page - 1;
+		
+		List<ProductDto> productsDto = new ArrayList<>();
+		
+		Pageable pageableRequest = PageRequest.of(page, limit);
+		
+		Page<ProductEntity> productPage;
+
+		productPage = productRepository.findBySelectedProductIsTrue(pageableRequest);
+		
+		List<ProductEntity> products = productPage.getContent();
+		
+		for(ProductEntity productEntity: products) {
+			
+			ModelMapper modelMapper = new ModelMapper();	
+			ProductDto product = modelMapper.map(productEntity, ProductDto.class);
+			
+			productsDto.add(product);
+		}
+		
+		return productsDto;
 	}
 	
+//===============================================================================================
 	@Override
-	public List<ProductDto> getAllPromotionProducts() {
+	public int getTotalPromotionProductsCount() {
+		return productRepository.getTotalPromotionProductsCount();
+	}
 		
+	@Override
+	public List<ProductDto> getAllPromotionProducts(int page, int limit) {
+		/*
 		List<ProductEntity> products = (List<ProductEntity>) productRepository.findByPromotionProductIsTrue();
 		
 		Type listType = new TypeToken<List<ProductDto>>() {}.getType();
@@ -82,11 +390,41 @@ public class ProductServiceImpl implements ProductService {
 		List<ProductDto> productsDto = new ModelMapper().map(products, listType);
 		
 		return productsDto;
+		*/
+		
+		if(page > 0) page = page - 1;
+		
+		List<ProductDto> productsDto = new ArrayList<>();
+		
+		Pageable pageableRequest = PageRequest.of(page, limit);
+		
+		Page<ProductEntity> productPage;
+
+		productPage = productRepository.findByPromotionProductIsTrue(pageableRequest);
+		
+		List<ProductEntity> products = productPage.getContent();
+		
+		for(ProductEntity productEntity: products) {
+			
+			ModelMapper modelMapper = new ModelMapper();	
+			ProductDto product = modelMapper.map(productEntity, ProductDto.class);
+			
+			productsDto.add(product);
+		}
+		
+		return productsDto;
 	}
 
+
+//===============================================================================================
 	@Override
-	public List<ProductDto> getAllAvailableProducts() {
+	public int getTotalAvailableProductsCount() {
+		return productRepository.getTotalAvailableProductsCount();
+	}
 		
+	@Override
+	public List<ProductDto> getAllAvailableProducts(int page, int limit) {
+		/*
 		List<ProductEntity> products = (List<ProductEntity>) productRepository.findByAvailableProductIsTrue();
 		
 		Type listType = new TypeToken<List<ProductDto>>() {}.getType();
@@ -94,11 +432,40 @@ public class ProductServiceImpl implements ProductService {
 		List<ProductDto> productsDto = new ModelMapper().map(products, listType);
 		
 		return productsDto;
+		*/
+		
+		if(page > 0) page = page - 1;
+		
+		List<ProductDto> productsDto = new ArrayList<>();
+		
+		Pageable pageableRequest = PageRequest.of(page, limit);
+		
+		Page<ProductEntity> productPage;
+
+		productPage = productRepository.findByAvailableProductIsTrue(pageableRequest);
+		
+		List<ProductEntity> products = productPage.getContent();
+		
+		for(ProductEntity productEntity: products) {
+			
+			ModelMapper modelMapper = new ModelMapper();	
+			ProductDto product = modelMapper.map(productEntity, ProductDto.class);
+			
+			productsDto.add(product);
+		}
+		
+		return productsDto;
 	}
 
+//===============================================================================================
 	@Override
-	public List<ProductDto> getAllTendancyProducts() {
-		
+	public int getTotalTendancyProductsCount() {
+		return productRepository.getTotalTendancyProductsCount();
+	}
+			
+	@Override
+	public List<ProductDto> getAllTendancyProducts(int page, int limit) {
+		/*
 		List<ProductEntity> products = (List<ProductEntity>) productRepository.findByTendancyProductIsTrue();
 		
 		Type listType = new TypeToken<List<ProductDto>>() {}.getType();
@@ -106,11 +473,40 @@ public class ProductServiceImpl implements ProductService {
 		List<ProductDto> productsDto = new ModelMapper().map(products, listType);
 		
 		return productsDto;
-	}
-
-	@Override
-	public List<ProductDto> getAllNewProducts() {
+		*/
 		
+		if(page > 0) page = page - 1;
+		
+		List<ProductDto> productsDto = new ArrayList<>();
+		
+		Pageable pageableRequest = PageRequest.of(page, limit);
+		
+		Page<ProductEntity> productPage;
+
+		productPage = productRepository.findByTendancyProductIsTrue(pageableRequest);
+		
+		List<ProductEntity> products = productPage.getContent();
+		
+		for(ProductEntity productEntity: products) {
+			
+			ModelMapper modelMapper = new ModelMapper();	
+			ProductDto product = modelMapper.map(productEntity, ProductDto.class);
+			
+			productsDto.add(product);
+		}
+		
+		return productsDto;
+	}
+//==================================================================================================
+	@Override
+	public int getTotalNewProductsCount() {
+		return productRepository.getTotalNewProductsCount();
+	}
+	
+	@Override
+	public List<ProductDto> getAllNewProducts(int page, int limit) {
+		
+		/*
 		List<ProductEntity> products = (List<ProductEntity>) productRepository.findByNewProductIsTrue();
 		
 		Type listType = new TypeToken<List<ProductDto>>() {}.getType();
@@ -118,11 +514,41 @@ public class ProductServiceImpl implements ProductService {
 		List<ProductDto> productsDto = new ModelMapper().map(products, listType);
 		
 		return productsDto;
-	}
-
-	@Override
-	public List<ProductDto> getAllFuturProducts() {
+		*/
 		
+		if(page > 0) page = page - 1;
+		
+		List<ProductDto> productsDto = new ArrayList<>();
+		
+		Pageable pageableRequest = PageRequest.of(page, limit);
+		
+		Page<ProductEntity> productPage;
+
+		productPage = productRepository.findByNewProductIsTrue(pageableRequest);
+		
+		List<ProductEntity> products = productPage.getContent();
+		
+		for(ProductEntity productEntity: products) {
+			
+			ModelMapper modelMapper = new ModelMapper();	
+			ProductDto product = modelMapper.map(productEntity, ProductDto.class);
+			
+			productsDto.add(product);
+		}
+		
+		return productsDto;
+		
+	}
+//===============================================================================================
+	@Override
+	public int getTotalFuturProductsCount() {
+		return productRepository.getTotalFuturProductsCount();
+	}
+	
+	
+	@Override
+	public List<ProductDto> getAllFuturProducts(int page, int limit) {
+		/*
 		List<ProductEntity> products = (List<ProductEntity>) productRepository.findByFuturProductIsTrue();
 		
 		Type listType = new TypeToken<List<ProductDto>>() {}.getType();
@@ -130,6 +556,30 @@ public class ProductServiceImpl implements ProductService {
 		List<ProductDto> productsDto = new ModelMapper().map(products, listType);
 		
 		return productsDto;
+		*/
+		
+		if(page > 0) page = page - 1;
+		
+		List<ProductDto> productsDto = new ArrayList<>();
+		
+		Pageable pageableRequest = PageRequest.of(page, limit);
+		
+		Page<ProductEntity> productPage;
+
+		productPage = productRepository.findByFuturProductIsTrue(pageableRequest);
+		
+		List<ProductEntity> products = productPage.getContent();
+		
+		for(ProductEntity productEntity: products) {
+			
+			ModelMapper modelMapper = new ModelMapper();	
+			ProductDto product = modelMapper.map(productEntity, ProductDto.class);
+			
+			productsDto.add(product);
+		}
+		
+		return productsDto;
+		
 	}
 
 
@@ -183,7 +633,14 @@ public class ProductServiceImpl implements ProductService {
 	    productEntity.setName(productDto.getName());
 	    productEntity.setDescription(productDto.getDescription());
 	    productEntity.setPrice(productDto.getPrice());
-	    productEntity.setCurrentPrice(productDto.getCurrentPrice());
+	    if(productDto.getPromotionProduct() == false)
+	    {
+	    	productEntity.setCurrentPrice(productDto.getPrice());
+	    }
+	    else 
+	    {
+	    	productEntity.setCurrentPrice(productDto.getPrice()* (1 - productDto.getPromotionRate()));	
+	    }
 	    productEntity.setStock(productDto.getStock());
 	    productEntity.setPromotionProduct(productDto.getPromotionProduct());
 	    productEntity.setPromotionRate(productDto.getPromotionRate());

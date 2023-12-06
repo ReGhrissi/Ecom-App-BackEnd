@@ -56,7 +56,7 @@ public class ECommerceApplication  implements CommandLineRunner{
 
 			@Override
 			public void run(String... args) throws Exception {
-				
+			/*	
 				repositoryRestConfiguration.exposeIdsFor(ProductEntity.class, CategoryEntity.class);
 				
 				categoryRepository.save(new CategoryEntity(1, util.generateStringId(32),"unknown.jpg","Téléphone & Tablette",null, true, null));
@@ -90,7 +90,7 @@ public class ECommerceApplication  implements CommandLineRunner{
 							productRepository.save(p);
 						}
 					});		 
-					
+					*/
 				}
 
 }
