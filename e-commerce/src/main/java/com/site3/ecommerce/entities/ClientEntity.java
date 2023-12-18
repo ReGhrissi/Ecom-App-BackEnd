@@ -35,13 +35,13 @@ public class ClientEntity implements Serializable {
 	@Column(length=20, nullable=false)
     private String name;
 	
-	@Column(length=20, nullable=false)
+	@Column( nullable=false)
     private String email;
 	
 	@Column(nullable=false)
     private String address;
 	
-	@Column(length=20, nullable=false)
+	@Column(length=20, nullable=false) 
     private String phoneNumber;
 	
 	@Column(length=20, nullable=false)

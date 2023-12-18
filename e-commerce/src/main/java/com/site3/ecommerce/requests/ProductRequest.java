@@ -1,5 +1,6 @@
 package com.site3.ecommerce.requests;
 
+import javax.persistence.Column;
 import javax.validation.constraints.NotNull;
 
 import lombok.Data;
@@ -18,6 +19,9 @@ public class ProductRequest {
 	
 	@NotNull(message="Le champ description ne doit pas etre null !")
 	private String description;
+	
+	@NotNull(message="Le champ details ne doit pas etre null !")
+	private String details;
 	
 	//@NotNull(message="Le champ price ne doit pas etre null !")
 	private double price;

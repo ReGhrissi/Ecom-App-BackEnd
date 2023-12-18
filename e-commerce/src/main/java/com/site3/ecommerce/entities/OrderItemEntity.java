@@ -37,7 +37,7 @@ public class OrderItemEntity implements Serializable {
     private double price;
     
 	@OneToOne
-	@JoinColumn(name="products_id") // ????
+	@JoinColumn(name="product_id") // ????
     private ProductEntity product;
     
 	@ManyToOne

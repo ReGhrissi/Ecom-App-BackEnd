@@ -1,5 +1,6 @@
 package com.site3.ecommerce;
 
+import java.util.Date;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +57,7 @@ public class ECommerceApplication  implements CommandLineRunner{
 
 			@Override
 			public void run(String... args) throws Exception {
-			/*	
+				
 				repositoryRestConfiguration.exposeIdsFor(ProductEntity.class, CategoryEntity.class);
 				
 				categoryRepository.save(new CategoryEntity(1, util.generateStringId(32),"unknown.jpg","Téléphone & Tablette",null, true, null));
@@ -76,6 +77,7 @@ public class ECommerceApplication  implements CommandLineRunner{
 							p.setProductId(util.generateStringId(32));
 							p.setName(RandomString.make(18));
 							p.setDescription(RandomString.make(15));
+							p.setDetails(RandomString.make(15));
 							p.setPrice(10+rnd.nextInt(200));
 							p.setCurrentPrice(10+rnd.nextInt(200));
 							p.setStock(10+rnd.nextInt(200));
@@ -85,12 +87,13 @@ public class ECommerceApplication  implements CommandLineRunner{
 							p.setAvailableProduct(rnd.nextBoolean());
 							p.setPromotionProduct(rnd.nextBoolean());
 							p.setSelectedProduct(rnd.nextBoolean());
+							p.setCreationDate(new Date());
 							p.setCategory(c);
 							p.setPhotoName("unknown.jpg");
 							productRepository.save(p);
 						}
 					});		 
-					*/
+					
 				}
 
 }

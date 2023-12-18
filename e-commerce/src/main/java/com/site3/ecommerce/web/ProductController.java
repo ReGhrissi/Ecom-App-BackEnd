@@ -75,7 +75,7 @@ public class ProductController {
 			return new ResponseEntity<List<ProductResponse>>(productsResponse, HttpStatus.OK);
 		}
 		
-//-----------------------------------------------------------------------------------------	
+//----------------------------------------------Count by Keyword-------------------------------------------	
 		@GetMapping(path="/totalProductsCountByKeyword/{kw}")
 		public int getTotalProductsCountByKeyword( @PathVariable(name="kw") String keyword) {
 			
@@ -107,6 +107,42 @@ public class ProductController {
 			return new ResponseEntity<List<ProductResponse>>(productsResponse, HttpStatus.OK);
 		}
 	
+
+		
+//-------------------------------------------Count by Keyword and category ----------------------------------------------	
+		@GetMapping(path="/totalProductsCountByCategoryAndKeyword/{categoryId}/{kw}")
+		public int getTotalProductsCountByKeyword( @PathVariable(name="categoryId") String categoryId, @PathVariable(name="kw") String keyword) {
+			
+			return  productService.getTotalSearchProductsByCategoryCount(categoryId, keyword);
+			
+		}
+			
+//------------------------------------------------ getProductsByCategoryAndSearch() -----------------------------------
+		
+		//@GetMapping(produces={MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+		@GetMapping("/search/{categoryId}/{kw}")
+		public ResponseEntity<List<ProductResponse>> getProductsBySearch(@RequestParam(value="page", defaultValue = "1") int page,
+																		 @RequestParam(value="limit", defaultValue = "20") int limit,
+																		 @PathVariable(name="categoryId") String categoryId,
+																		 @PathVariable(name="kw") String keyword) 
+		{
+					
+			List<ProductResponse> productsResponse = new ArrayList<>();
+					
+			List<ProductDto> products = productService.getSearchProductsByCategory(page, limit, categoryId, keyword);
+					 
+				for(ProductDto productDto: products) { 
+						
+						ModelMapper modelMapper = new ModelMapper();
+						ProductResponse productResponse =  modelMapper.map(productDto, ProductResponse.class);
+						
+						productsResponse.add(productResponse);
+				}
+					
+			return new ResponseEntity<List<ProductResponse>>(productsResponse, HttpStatus.OK);
+		}
+	
+
 //-------------------------------------------Get All Products----------------------------------------------
 	/*
 	@GetMapping
@@ -234,7 +270,7 @@ public class ProductController {
 	public int getTotalPromotionProductsCountByCategory(@PathVariable String categoryId) {
 					
 			return  productService.getTotalPromotionProductsCountByCategory(categoryId);			
-	} 
+	}  
 		
 	@GetMapping(path="/promotionProductsByCat/{categoryId}")
 	public ResponseEntity<List<ProductResponse>>getPromotionProductsByCategory(@PathVariable String categoryId, 
@@ -248,7 +284,7 @@ public class ProductController {
 		
 		return new ResponseEntity<List<ProductResponse>>(productsResponse, HttpStatus.OK);
 		
-	}
+	} 
 
   /******************************************************************/
 	@GetMapping(path="/totalNewProductsCountByCat/{categoryId}")

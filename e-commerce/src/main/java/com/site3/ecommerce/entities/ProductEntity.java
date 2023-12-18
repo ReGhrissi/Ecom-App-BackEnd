@@ -1,6 +1,7 @@
 package com.site3.ecommerce.entities;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -38,11 +39,14 @@ public class ProductEntity implements Serializable {
 	
 	private String photoName = "unknown.jpg";
 	
-	@Column(nullable=false, length=120)
+	@Column(nullable=false)
 	private String name;
 	
-	@Column(nullable=false)
+	@Column(nullable=false, columnDefinition = "TEXT")
 	private String description;
+	
+	@Column(nullable=false, columnDefinition = "TEXT")
+	private String details;
 	
 	@Column(nullable=false)
 	private double price;
@@ -60,6 +64,8 @@ public class ProductEntity implements Serializable {
 	@Transient //ne sera pas ajouter dans la base de données
 	private int quantity=1;
 	private int stock;
+	
+	private Date creationDate;
 	
 	@ManyToOne
 	@JoinColumn(name="categories_id")

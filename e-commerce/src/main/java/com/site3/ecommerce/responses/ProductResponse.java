@@ -1,7 +1,9 @@
 package com.site3.ecommerce.responses;
 
+import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Column;
 
 import lombok.Data;
 
@@ -13,6 +15,7 @@ public class ProductResponse {
 	private String photoName;
 	private String name;
 	private String description;
+	private String details;
 	
 	private double price;
 	private double currentPrice;
@@ -30,6 +33,8 @@ public class ProductResponse {
 
 	//@Transient //ne sera pas ajouter dans la base de données
 	private int quantity;
+	
+	private Date creationDate;
 	
 	private String categoryId;
 	

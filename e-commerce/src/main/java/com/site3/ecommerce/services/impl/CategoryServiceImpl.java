@@ -111,10 +111,10 @@ public class CategoryServiceImpl implements CategoryService {
 		
 		if(categoryEntity == null) throw new RuntimeException("category not found"); 
 		
-		categoryRepository.delete(categoryEntity);
+		categoryRepository.deleteCategoryByCategoryId(categoryId);
 
 	}
-/*
+/* 
 	@Override
 	public List<CategoryDto> getCategories(int page, int limit, String search, int status) {
 	*//*	

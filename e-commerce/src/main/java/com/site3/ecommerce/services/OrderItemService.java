@@ -12,6 +12,8 @@ public interface OrderItemService {
 	
 	OrderItemDto getOrderItemByOrderItemId(String orderItemtId);
 	
+	long getTotalProductsCountById(String productId);
+	
 	OrderItemDto updateOrderItem(String id, OrderItemDto orderItemDto);
 	
 	void deleteClient(String clientId);

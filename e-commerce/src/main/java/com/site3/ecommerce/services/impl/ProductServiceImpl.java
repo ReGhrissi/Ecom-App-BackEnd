@@ -2,7 +2,10 @@ package com.site3.ecommerce.services.impl;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import javax.transaction.Transactional;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -11,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
 import com.site3.ecommerce.dao.CategoryRepository;
 import com.site3.ecommerce.dao.ProductRepository;
 import com.site3.ecommerce.dto.CategoryDto;
@@ -35,6 +39,20 @@ public class ProductServiceImpl implements ProductService {
 	
 	@Autowired
 	Utils util;
+	
+//-------------------------------------------------------------------------------	
+	@Override
+	public List<ProductDto> getAllProducts() {
+		
+		
+		List<ProductEntity> products = (List<ProductEntity>) productRepository.findAll();
+		
+		Type listType = new TypeToken<List<ProductDto>>() {}.getType();
+		
+		List<ProductDto> productsDto = new ModelMapper().map(products, listType);
+		
+		return productsDto;
+	}
 //-------------------------------------------------------------------------------------	
 	@Override
 	public int getTotalProductsCount() {
@@ -119,19 +137,52 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 //--------------------------------------------------------------------------------------
+
+	
 	@Override
-	public List<ProductDto> getAllProducts() {
+	public int getTotalSearchProductsByCategoryCount(String categoryId, String search) {
+
+		CategoryEntity currentCategory = categoryRepository.findByCategoryId(categoryId);
 		
+		return productRepository.getTotalProductsCountByCategoryAndKeyword(currentCategory, search);
+	}
+
+	@Override
+	public List<ProductDto> getSearchProductsByCategory(int page, int limit, String categoryId, String search) {
 		
-		List<ProductEntity> products = (List<ProductEntity>) productRepository.findAll();
+		CategoryEntity currentCategory = categoryRepository.findByCategoryId(categoryId);
 		
-		Type listType = new TypeToken<List<ProductDto>>() {}.getType();
+		if(page > 0) page = page - 1;
 		
-		List<ProductDto> productsDto = new ModelMapper().map(products, listType);
+		List<ProductDto> productsDto = new ArrayList<>();
+		
+		Pageable pageableRequest = PageRequest.of(page, limit);
+		
+		Page<ProductEntity> productPage;
+	/*	
+		if(search.isEmpty()) {
+			userPage = userRepository.findAllUsers(pageableRequest);
+		}
+		else {
+			
+			userPage = userRepository.findAllUserByCriteria(pageableRequest, search, status);
+		}
+	*/
+		productPage = productRepository.findAllProductsByCategoryAndKeyword(pageableRequest, currentCategory.getId(), search);
+		
+		List<ProductEntity> products = productPage.getContent();
+		
+		for(ProductEntity productEntity: products) {
+			
+			ModelMapper modelMapper = new ModelMapper();	
+			ProductDto product = modelMapper.map(productEntity, ProductDto.class);
+			
+			productsDto.add(product);
+		}
 		
 		return productsDto;
 	}
-	
+
 //===========================================================================================
 	@Override
 	public int getTotalProductsCountByCategory(String categoryId) {
@@ -164,7 +215,7 @@ public class ProductServiceImpl implements ProductService {
 		
 		Page<ProductEntity> productPage;
 
-		productPage = productRepository.findByCategory(currentCategory, pageableRequest);
+		productPage = productRepository.findByCategoryOrderByCreationDateDesc(currentCategory, pageableRequest);
 		
 		List<ProductEntity> products = productPage.getContent();
 		
@@ -202,7 +253,7 @@ public class ProductServiceImpl implements ProductService {
 		
 		Page<ProductEntity> productPage;
 
-		productPage = productRepository.findByCategoryAndPromotionProductIsTrue(currentCategory, pageableRequest);
+		productPage = productRepository.findByCategoryAndPromotionProductIsTrueOrderByCreationDateDesc(currentCategory, pageableRequest);
 		
 		List<ProductEntity> products = productPage.getContent();
 		
@@ -240,7 +291,7 @@ public class ProductServiceImpl implements ProductService {
 		
 		Page<ProductEntity> productPage;
 
-		productPage = productRepository.findByCategoryAndNewProductIsTrue(currentCategory, pageableRequest);
+		productPage = productRepository.findByCategoryAndNewProductIsTrueOrderByCreationDateDesc(currentCategory, pageableRequest);
 		
 		List<ProductEntity> products = productPage.getContent();
 		
@@ -278,7 +329,7 @@ public class ProductServiceImpl implements ProductService {
 		
 		Page<ProductEntity> productPage;
 
-		productPage = productRepository.findByCategoryAndTendancyProductIsTrue(currentCategory, pageableRequest);
+		productPage = productRepository.findByCategoryAndTendancyProductIsTrueOrderByCreationDateDesc(currentCategory, pageableRequest);
 		
 		List<ProductEntity> products = productPage.getContent();
 		
@@ -316,7 +367,7 @@ public class ProductServiceImpl implements ProductService {
 		
 		Page<ProductEntity> productPage;
 
-		productPage = productRepository.findByCategoryAndFuturProductIsTrue(currentCategory, pageableRequest);
+		productPage = productRepository.findByCategoryAndFuturProductIsTrueOrderByCreationDateDesc(currentCategory, pageableRequest);
 		
 		List<ProductEntity> products = productPage.getContent();
 		
@@ -359,7 +410,7 @@ public class ProductServiceImpl implements ProductService {
 		
 		Page<ProductEntity> productPage;
 
-		productPage = productRepository.findBySelectedProductIsTrue(pageableRequest);
+		productPage = productRepository.findBySelectedProductIsTrueOrderByCreationDateDesc(pageableRequest);
 		
 		List<ProductEntity> products = productPage.getContent();
 		
@@ -400,7 +451,7 @@ public class ProductServiceImpl implements ProductService {
 		
 		Page<ProductEntity> productPage;
 
-		productPage = productRepository.findByPromotionProductIsTrue(pageableRequest);
+		productPage = productRepository.findByPromotionProductIsTrueOrderByCreationDateDesc(pageableRequest);
 		
 		List<ProductEntity> products = productPage.getContent();
 		
@@ -442,7 +493,7 @@ public class ProductServiceImpl implements ProductService {
 		
 		Page<ProductEntity> productPage;
 
-		productPage = productRepository.findByAvailableProductIsTrue(pageableRequest);
+		productPage = productRepository.findByAvailableProductIsTrueOrderByCreationDateDesc(pageableRequest);
 		
 		List<ProductEntity> products = productPage.getContent();
 		
@@ -483,7 +534,7 @@ public class ProductServiceImpl implements ProductService {
 		
 		Page<ProductEntity> productPage;
 
-		productPage = productRepository.findByTendancyProductIsTrue(pageableRequest);
+		productPage = productRepository.findByTendancyProductIsTrueOrderByCreationDateDesc(pageableRequest);
 		
 		List<ProductEntity> products = productPage.getContent();
 		
@@ -524,7 +575,7 @@ public class ProductServiceImpl implements ProductService {
 		
 		Page<ProductEntity> productPage;
 
-		productPage = productRepository.findByNewProductIsTrue(pageableRequest);
+		productPage = productRepository.findByNewProductIsTrueOrderByCreationDateDesc(pageableRequest);
 		
 		List<ProductEntity> products = productPage.getContent();
 		
@@ -566,7 +617,7 @@ public class ProductServiceImpl implements ProductService {
 		
 		Page<ProductEntity> productPage;
 
-		productPage = productRepository.findByFuturProductIsTrue(pageableRequest);
+		productPage = productRepository.findByFuturProductIsTrueOrderByCreationDateDesc(pageableRequest);
 		
 		List<ProductEntity> products = productPage.getContent();
 		
@@ -594,6 +645,7 @@ public class ProductServiceImpl implements ProductService {
 		CategoryDto categoryDto = modelMapper.map(currentCategory, CategoryDto.class);
 		
 		product.setProductId(util.generateStringId(30));
+		product.setCreationDate(new Date());
 		product.setCategory(categoryDto);
 		
 		ProductEntity productEntity = modelMapper.map(product, ProductEntity.class); 
@@ -632,6 +684,7 @@ public class ProductServiceImpl implements ProductService {
 	    // Mettez à jour les propriétés de l'entité UserEntity
 	    productEntity.setName(productDto.getName());
 	    productEntity.setDescription(productDto.getDescription());
+	    productEntity.setDetails(productDto.getDetails());
 	    productEntity.setPrice(productDto.getPrice());
 	    if(productDto.getPromotionProduct() == false)
 	    {
@@ -663,21 +716,23 @@ public class ProductServiceImpl implements ProductService {
 	
 	
 	@Override
+	@Transactional
 	public void deleteProduct(String productId) {
 		
 		ProductEntity product = productRepository.findByProductId(productId);
 		
-		
 
 		if(product == null) throw new RuntimeException("Product not found !");
-		
+	/*	
 		long  ID = product.getId();
 		
 		//System.out.println("product :"+ product.toString());
 		
 		productRepository.deleteById(1);
-
+*/
+		 productRepository.deleteProductByProductId(productId);
 	}
+
 
 
 

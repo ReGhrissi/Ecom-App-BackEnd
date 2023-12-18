@@ -1,8 +1,10 @@
 package com.site3.ecommerce.dto;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Transient;
 
 import lombok.Data;
@@ -23,6 +25,7 @@ public class ProductDto implements Serializable {
 	
 	private String name;
 	private String description;
+	private String details;
 	
 	private double price;
 	private double currentPrice;
@@ -38,6 +41,8 @@ public class ProductDto implements Serializable {
 	@Transient //ne sera pas ajouter dans la base de données
 	private int quantity=1;
 	private int stock;
+	
+	private Date creationDate;
 	
 	private CategoryDto category;
 	

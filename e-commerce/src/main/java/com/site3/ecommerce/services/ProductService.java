@@ -3,18 +3,28 @@ package com.site3.ecommerce.services;
 import java.util.List;
 
 import com.site3.ecommerce.dto.ProductDto;
+import com.site3.ecommerce.entities.CategoryEntity;
 
 
 
 public interface ProductService {
 
+//-------------------------------------------- pour tous les produits --------------------------------
+	
+	List<ProductDto> getAllProducts();
+	
 	int getTotalProductsCount();
 	List<ProductDto> getProducts(int page, int limit); // par page
 	
 	int getTotalSearchProductsCount(String search);
 	List<ProductDto> getSearchProducts(int page, int limit, String search); // par recherche
 	
-	List<ProductDto> getAllProducts();
+//-------------------------------------------- pour les produits par categorie --------------------------
+	
+		int getTotalSearchProductsByCategoryCount(String categoryId, String search);
+		
+		List<ProductDto> getSearchProductsByCategory(int page, int limit, String categoryId, String search); // par recherche
+		
 //------------	
 		int getTotalProductsCountByCategory(String categoryId);
 	List<ProductDto> getAllProductsByCategory(String categoryId,int page, int limit);
